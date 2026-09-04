@@ -309,6 +309,14 @@ Wane-interference of any kind · 3-body split output (1.5×) · clone×Doom/Leec
 2. Country name sign-off ("the Commonweal") and isles name ("Halcyon")
 3. Epilogue trigger formalized: nine tails (all 8 mastered) → Sun Road base scene; Deep Roots lore found en route
 4. Pilgrim's eight phase-lines — the game's best 80 words, to be written as a set
+5. Character customization & renaming — where/when the customization and rename screens live in the game flow (start of game vs. diegetic location) — added 2026-09-03 (see §18)
+
+---
+
+## 18. Post-lock rulings (addenda — human rulings, recorded faithfully)
+
+- **Character customization (ruled 2026-09-03):** the player has **two to six sprite variants with color variations** (emulating GBC palette limitations). **Kon Kon has a single sprite set with two color variations** — fur color, and tail tips/underbelly — *slightly breaking* the GBC limitations: a diegetic indication of Kon Kon's otherworldly nature. **Both the player and Kon Kon are renamable** (classic JRPG-style rename screen). Scope impact: adds 2–6 player sprite sets + palettes to the §14 sprite ledger; rename/customization UI touches save data (Unit 15) and the game-open flow. Placement is open decision ✎ #5 (§17).
+- **GBC shell aesthetic (ruled 2026-09-03; Unit 20):** a purple shell with visible-circuitry vibe — "nothing legally identifying, just a cool vibe." The human will mock up a couple of shell options and choose a default.
 
 ---
 

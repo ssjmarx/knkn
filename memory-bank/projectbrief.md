@@ -40,4 +40,4 @@ The grading rubric is the **Scope Ledger** (`design.md` §14): 9 battle + 9 over
 
 ## Status
 
-Design **locked at v1.0**; implementation not started (pre-Unit 0). See `activeContext.md` for current state and `progress.md` for the milestone tracker. Sequel/NG+ content is parked (`design.md` §15).
+Design **locked at v1.0**, with post-lock addenda recorded in `design.md` §18 (character customization; GBC shell aesthetic). **Unit 0 in progress** — dev environment and hand scaffold built, first deploy pending. See `activeContext.md` for current state and `progress.md` for the milestone tracker. Sequel/NG+ content is parked (`design.md` §15).
