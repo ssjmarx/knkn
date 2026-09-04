@@ -1,7 +1,7 @@
-import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT } from "./config";
-import { BootScene } from "./scenes/bootscene";
-import { GameScene } from "./scenes/gamescene";
+import Phaser from "phaser"
+import { GAME_WIDTH, GAME_HEIGHT } from "./config"
+import { BootScene } from "./scenes/bootscene"
+import { GameScene } from "./scenes/gamescene"
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -18,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoRound: true,
   },
-  scene: [BootScene, GameScene],
-};
+  scene: [BootScene, GameScene]
+}
 
-new Phaser.Game(config);
+new Phaser.Game(config)
