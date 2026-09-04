@@ -11,7 +11,7 @@ class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "fox_single");
+    this.add.image(0, GAME_HEIGHT, "fox_single");
   }
 }
 
