@@ -40,4 +40,4 @@ The grading rubric is the **Scope Ledger** (`design.md` §14): 9 battle + 9 over
 
 ## Status
 
-Design **locked at v1.0**, with post-lock addenda recorded in `design.md` §18 (character customization; GBC shell aesthetic). **Unit 0 complete (2026-09-03)** — dev environment, hand scaffold, and first deploy done: "Hello Kon Kon" is live at `knkn.dunaway.io`. See `activeContext.md` for current state and `progress.md` for the milestone tracker. Sequel/NG+ content is parked (`design.md` §15).
+Design **locked at v1.0**, with post-lock addenda recorded in `design.md` §18 (character customization; GBC shell aesthetic). **Units 0–1 complete (2026-09-03)** — dev environment, scaffold, first deploy, and the walking fox are live at `knkn.dunaway.io`. See `activeContext.md` for current state and `progress.md` for the milestone tracker. Sequel/NG+ content is parked (`design.md` §15).

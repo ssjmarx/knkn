@@ -6,14 +6,14 @@
 
 | # | Milestone | Semester gate | Done when | Status |
 |---|---|---|---|---|
-| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | ⬜ not started |
+| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U1 done) |
 | 2 | **The boss fight** | S2 final | Scripted boss: base form + two stones, Wane visible on screen, transformation live, win/lose screens | ⬜ not started |
 | 3 | **The vertical slice** | S3 | One town, one stone quest, one scaling guardian, phone-perfect, deployed | ⬜ not started |
 | 4 | **The demo** | S4 | Next Fest-ready public demo → content grind to v1.0 | ⬜ not started |
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 dev env & first deploy — **✅ DONE 2026-09-03** ("Hello Kon Kon" live at knkn.dunaway.io; optional unguided challenge outstanding) · U1 scene/sprite/game loop/movement — *next* · U2 Tiled tilemaps, collision, camera · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
+- **S1 Foundations "The Walk":** U0 dev env & first deploy — **✅ DONE 2026-09-03** · U1 scene/sprite/game loop/movement — **✅ DONE 2026-09-03** (walking fox live at knkn.dunaway.io; challenge + all extras done) · U2 Tiled tilemaps, collision, camera — *next* · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -33,6 +33,7 @@
 - **2026-09-03** — **UNIT 0 COMPLETE:** `dist/` rsynced to `~/opt/web/knkn` — **"Hello Kon Kon" live at knkn.dunaway.io**, on the human's own infra, first deploy of the course
 - **2026-09-03** — Asset licensing convention adopted: `licenses/` folder + source-tagged filenames; first entry Elthen's fox sprite pack (placeholder — bespoke Kon Kon art required)
 - **2026-09-03** — Server DNS incident resolved: Pi-hole leftovers (stale `127.0.0.1` + `chattr +i` lock) removed from `/etc/resolv.conf`, repointed to 1.1.1.1/8.8.8.8, re-locked; rsync installed on the server; `~/opt/web/knkn` chowned
+- **2026-09-03** — **UNIT 1 COMPLETE:** the fox walks, live at knkn.dunaway.io — scene split (`src/scenes/bootscene.ts` / `gamescene.ts`), Elthen sheet sliced (14×7 grid), walk + idle anims, cursor-velocity movement with world-bounds collision, FIT/autoRound scaling, measured collision body (20×15 at +6,+17), facing-flip challenge done; break-its done; commits `6c58da1` → `d5b190a` → `6477d00`, all pushed
 
 ## Decision log
 
@@ -56,7 +57,9 @@
 | 2026-09-03 | **Character customization added to canon (post-lock ruling, `design.md` §18):** player 2–6 sprite variants with GBC-limited palette variations; Kon Kon one sprite set, two color variations (fur + tail tips/underbelly) slightly *breaking* GBC limits as a diegetic hint of otherworldliness; both renamable (classic rename screen) | user ruling |
 | 2026-09-03 | GBC shell aesthetic (Unit 20): purple shell with visible-circuitry vibe, nothing legally identifying; multiple options, default TBD | user ruling |
 | 2026-09-03 | Asset licensing convention: every third-party asset gets its license copied into `licenses/` and a source-tagged filename (e.g. `_elthens`); placeholder fox = Elthen's pack (32×32, non-GBC, not two-tone-ready — bespoke Kon Kon art required) | user directive |
+| 2026-09-03 | Code style: **semicolon-free** (ASI), commas only where required — "treating it like Python" | user ruling |
+| 2026-09-03 | File naming: **lowercase for everything** (`bootscene.ts`, `gamescene.ts`) — consistency over convention | user ruling |
 
 ## Not started
 
-Everything else: units U1–U23 (U1 is next), all milestones, CI.
+Everything else: units U2–U23 (U2 is next), milestones 1–4 (M1 in progress), CI.

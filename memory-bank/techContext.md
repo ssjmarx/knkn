@@ -31,6 +31,9 @@ Tiled for tilemaps (Unit 2) · spreadsheet→JSON content pipeline for 67 moves 
 - Second dev machine (laptop) with its own `gitea` SSH alias — both machines pushed historically; untested for this repo
 - VS Code is the IDE
 - **Project tooling pinned (2026-09-03):** `phaser` 4.2.1 / `typescript` 7.0.2 / `vite` 8.2.2 — exact pins (upgrades are deliberate acts); `npm install` clean, 19 packages, 0 vulnerabilities
+- **Code style (user ruling 2026-09-03):** semicolon-free (relying on ASI), commas only where required; filenames lowercase everywhere; no linter/formatter yet — a Prettier elective can enforce the style mechanically later
+- **Elthen fox sheet map (measured):** 448×224 = 14 columns × 7 rows of 32×32 frames; walk = row 2 (frames 28–35), idle = row 0 (frames 0–4); fox body inside the frame = 20×15 at +6,+17 (also the arcade collision body)
+- Desk monitor is a **CRT** — adaptive FIT + autoRound scaling chosen accordingly; CRTs are forgiving for pixel-art scaling
 
 ## Infrastructure decisions (resolved 2026-09-03)
 
