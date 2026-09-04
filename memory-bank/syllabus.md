@@ -1,4 +1,4 @@
-> **CANON MIRROR — the authoritative copy.** This file carries the KON KON 101 course syllabus & dev roadmap (Phaser/TypeScript track) inside the memory bank, seeded verbatim from `planning/syllabus` on 2026-09-03. Per `.clinerules`, the memory bank is the AI's source of truth; `planning/` is the historical source of record. Update this file only to record human-issued course changes and rulings, faithfully. If this file and `planning/syllabus` diverge, ask the human which is current before syncing.
+> **CANON — the sole authoritative copy.** This file carries the KON KON 101 course syllabus & dev roadmap (Phaser/TypeScript track), seeded verbatim from `planning/syllabus` on 2026-09-03. The `planning/` folder was retired into git history that same day (commit `c84cc39`), making this the only authoritative copy. Per `.clinerules`, the memory bank is the AI's source of truth. Update this file only to record human-issued course changes and rulings, faithfully.
 
 # KON KON 101 — Course Syllabus & Dev Roadmap
 

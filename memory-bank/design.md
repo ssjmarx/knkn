@@ -1,4 +1,4 @@
-> **CANON MIRROR — the authoritative copy.** This file carries the KON KON game design (lock v1.0) inside the memory bank, seeded verbatim from `planning/outline` on 2026-09-03. Per `.clinerules`, the memory bank is the AI's source of truth; `planning/` is the historical source of record. Update this file only to record human-issued design rulings, faithfully. If this file and `planning/outline` diverge, ask the human which is current before syncing.
+> **CANON — the sole authoritative copy.** This file carries the KON KON game design (lock v1.0), seeded verbatim from `planning/outline` on 2026-09-03. The `planning/` folder was retired into git history that same day (commit `c84cc39`), making this the only authoritative copy. Per `.clinerules`, the memory bank is the AI's source of truth. Update this file only to record human-issued design rulings, faithfully.
 
 # KON KON — Game Design Reference v1.0
 

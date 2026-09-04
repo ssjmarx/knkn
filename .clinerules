@@ -21,7 +21,7 @@ Before starting any task — including answering a quick question — read every
 7. `memory-bank/design.md` — the full game design canon (lock v1.0)
 8. `memory-bank/syllabus.md` — the full course & dev roadmap
 
-**The memory bank is the authoritative design document as far as you are concerned.** If code, `planning/`, or anything else in the repo conflicts with it, do not guess: surface the conflict to the human, ask which is current, then sync the bank to their ruling.
+**The memory bank is the authoritative design document as far as you are concerned** — and, since `planning/` was retired into git history on 2026-09-03, the sole source of truth. If code or anything else in the repo conflicts with the bank, do not guess: surface the conflict to the human, ask which is current, then sync the bank to their ruling.
 
 ## 2. File access: memory bank only
 
@@ -60,5 +60,5 @@ Update the bank:
 Conventions:
 
 - `activeContext.md` and `progress.md` are the living files — update them with dated, factual entries (current unit, next steps, decisions, blockers).
-- `design.md` and `syllabus.md` are canon mirrors (seeded verbatim from `planning/outline` and `planning/syllabus` on 2026-09-03). Update them **only** to record human-issued rulings and changes, faithfully. `planning/` is the historical source of record; if it and a mirror diverge, ask the human which is current, then sync.
+- `design.md` and `syllabus.md` are canon mirrors (seeded verbatim from the original `planning/` documents on 2026-09-03; that folder was retired into git history the same day, so the mirrors are the sole authoritative copies). Update them **only** to record human-issued rulings and changes, faithfully.
 - Record what was decided — never what you'd prefer. No editorializing about the design inside the bank.

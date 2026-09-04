@@ -24,11 +24,11 @@ Tiled for tilemaps (Unit 2) · spreadsheet→JSON content pipeline for 67 moves 
 
 - Node **v25.5.0** — works, but it is the *non-LTS* line; the syllabus calls for Node **LTS** (the human may switch to the Node 24 LTS via nvm/fnm before starting Unit 0)
 - npm 11.8.0; no pnpm/yarn/bun installed (the course is npm-first anyway)
-- git 2.47.3 — **repo not yet initialized**; `git init` is the human's Unit 0 step
-- **git identity is a placeholder** (`Your Name` / `your.email@example.com`) — must be replaced with real values before the first commit
+- git 2.47.3 — **repo initialized 2026-09-03**: branch `master`, two commits, no remote yet; the original `planning/` docs are preserved in history (`61285c6`) and were retired in `c84cc39`
+- **git identity is still the placeholder** (`Your Name` / `your.email@example.com`) — and both existing commits carry it; set real values and rewrite the two commits before any push
 - VS Code is the IDE
 
 ## Open infrastructure decisions
 
 - **Deploy target** ("your website"): GitHub Pages vs Netlify vs Vercel vs Cloudflare Pages — undecided; it determines the Vite `base` path (e.g. `/knkn/` for a GitHub Pages project site) and the shape of the CI deploy job
-- CI provider details follow from the repo host once the human creates and pushes the repo
+- CI provider details follow from the repo host once the human adds a remote and pushes (no remote configured yet)

@@ -13,7 +13,7 @@
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 dev env & first deploy · U1 scene/sprite/game loop/movement · U2 Tiled tilemaps, collision, camera · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *all not started*
+- **S1 Foundations "The Walk":** U0 dev env & first deploy — *in progress (git repo initialized + guardrails committed; identity fix, scaffold, deploy pending)* · U1 scene/sprite/game loop/movement · U2 Tiled tilemaps, collision, camera · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -23,6 +23,7 @@
 - **2026-09-03** — Game design locked at **v1.0** (`planning/outline`): vision & pillars, setting canon, geography, clock/calendar, the fox (stats, nine forms, tails, mastery), 67 moves & 92 instances, battle system (two-actor queue, damage formula, statuses, Wane, 29 rites, Foxfire Split, packs, scaling), Powers, 8×8 type chart, reputation tiers, overworld verbs, story spine, cast & organizations, Scope Ledger, Watchlist, open decisions
 - **2026-09-03** — Course syllabus v1 (`planning/syllabus`): Phaser/TypeScript track, 4 semesters / 24 units / 4 milestones, 6 locked architecture decisions, TS progression map, lesson format
 - **2026-09-03** — AI guardrails seeded: `.clinerules` (learning-project rules, memory-bank-only writes, read-the-bank-first) + this memory bank, with verbatim canon mirrors `design.md` and `syllabus.md`
+- **2026-09-03** — Repo initialized as a git repository (branch `master`, no remote): initial commit `61285c6` (`.clinerules` + memory bank + the original planning docs), then `c84cc39` retiring `planning/` — **the memory bank is now the sole source of truth**; the original docs live only in git history
 
 ## Decision log
 
@@ -35,7 +36,9 @@
 | 2026-09-03 | Deploy in week one, CI from the start; web-first, packaging deferred to S4 | syllabus §I.5–6 |
 | 2026-09-03 | Tails = mastered stones (not stones carried); the ascent is sequel-only | design lock v1.0 header rulings |
 | 2026-09-03 | AI scope: learning project — the agent writes only memory-bank files; the human authors everything else | user directive, guardrail seeding session |
+| 2026-09-03 | `planning/` retired — deleted after preservation in git history; the bank's canon mirrors are the sole authoritative copies | user action |
+| 2026-09-03 | Open decision #6 (rename planning files to `.md`) — moot, resolved by deletion | follows from the above |
 
 ## Not started
 
-Everything else: all units U0–U23, all milestones, repo initialization, first deploy.
+Everything else: units U1–U23 (U0 in progress), all milestones, first deploy, remote/push, CI.
