@@ -6,14 +6,14 @@
 
 | # | Milestone | Semester gate | Done when | Status |
 |---|---|---|---|---|
-| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U1 done) |
+| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U2 done) |
 | 2 | **The boss fight** | S2 final | Scripted boss: base form + two stones, Wane visible on screen, transformation live, win/lose screens | ⬜ not started |
 | 3 | **The vertical slice** | S3 | One town, one stone quest, one scaling guardian, phone-perfect, deployed | ⬜ not started |
 | 4 | **The demo** | S4 | Next Fest-ready public demo → content grind to v1.0 | ⬜ not started |
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 dev env & first deploy — **✅ DONE 2026-09-03** · U1 scene/sprite/game loop/movement — **✅ DONE 2026-09-03** (walking fox live at knkn.dunaway.io; challenge + all extras done) · U2 Tiled tilemaps, collision, camera — *next* · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
+- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — *next* · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -34,6 +34,9 @@
 - **2026-09-03** — Asset licensing convention adopted: `licenses/` folder + source-tagged filenames; first entry Elthen's fox sprite pack (placeholder — bespoke Kon Kon art required)
 - **2026-09-03** — Server DNS incident resolved: Pi-hole leftovers (stale `127.0.0.1` + `chattr +i` lock) removed from `/etc/resolv.conf`, repointed to 1.1.1.1/8.8.8.8, re-locked; rsync installed on the server; `~/opt/web/knkn` chowned
 - **2026-09-03** — **UNIT 1 COMPLETE:** the fox walks, live at knkn.dunaway.io — scene split (`src/scenes/bootscene.ts` / `gamescene.ts`), Elthen sheet sliced (14×7 grid), walk + idle anims, cursor-velocity movement with world-bounds collision, FIT/autoRound scaling, measured collision body (20×15 at +6,+17), facing-flip challenge done; break-its done; commits `6c58da1` → `d5b190a` → `6477d00`, all pushed
+- **2026-09-04** — **UNIT 2 COMPLETE:** Kon Kon walks a real map at knkn.dunaway.io — 30×30 tile world (`test_area.json`, tileset `town` embedded), tile-property collision (57 `collides` props), hard-locked camera (lerp 1 — ruled the accurate GBC feel), canopy overlay (`branches.setDepth(1)`), boot-time tile-size validation via the `Tilemap` object; commits `77a243f` + `2c5e779`, pushed and deployed
+- **2026-09-04** — **Three-bug postmortem (Unit 2):** (1) Tiled export carried an external `.tsx` reference — embed tilesets before export; (2) `addTilesetImage` wants the tileset's *name field*, not its filename; (3) Phaser's typed caches: `tilemapTiledJSON` stores `{format, data}` in `cache.tilemap`, not `cache.json` — a lesson-code bug planted by the agent, caught by the human's boot-time validation guard. All three resolved by reading shipped source in `node_modules/phaser/src`, not by guessing. Workflow lesson: debug on `npm run dev`, deploy to verify.
+- **2026-09-04** — Aspect ruled **240×240 (1:1)** (supersedes 240×320); camera feel ruled **locked, lerp 1**; Grumpy Function placeholder tilesets (8×8 scaled 2×) licensed in `licenses/` — convention upheld, 2 entries
 
 ## Decision log
 
@@ -59,7 +62,10 @@
 | 2026-09-03 | Asset licensing convention: every third-party asset gets its license copied into `licenses/` and a source-tagged filename (e.g. `_elthens`); placeholder fox = Elthen's pack (32×32, non-GBC, not two-tone-ready — bespoke Kon Kon art required) | user directive |
 | 2026-09-03 | Code style: **semicolon-free** (ASI), commas only where required — "treating it like Python" | user ruling |
 | 2026-09-03 | File naming: **lowercase for everything** (`bootscene.ts`, `gamescene.ts`) — consistency over convention | user ruling |
+| 2026-09-04 | Virtual resolution **240×240 (1:1)**, 15×15 tiles visible — supersedes 240×320 (3:4); portrait room for shell art/buttons, landscape side bars for alternate touch layout | user ruling |
+| 2026-09-04 | Camera feel: **hard-locked, lerp 1** — the accurate GBC representation; deadzone/trailing rejected for the overworld (sub-pixel jitter observed at low lerp; real GB hardware scrolled whole pixels only) | user ruling |
+| 2026-09-04 | Placeholder terrain: Grumpy Function interior + exterior tilesets (8×8 DMG-style, scaled 2× to `TILE_SIZE` 16; "clashy" placeholder look accepted — bespoke art later); license filed in `licenses/` | user action |
 
 ## Not started
 
-Everything else: units U2–U23 (U2 is next), milestones 1–4 (M1 in progress), CI.
+Everything else: units U3–U23 (U3 is next), milestones 1–4 (M1 in progress — U3–U5 remain), CI.

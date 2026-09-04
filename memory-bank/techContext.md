@@ -12,13 +12,13 @@
 
 ## Presentation constraints
 
-- Virtual resolution **240×320** (3:4), **16px** tiles — one config constant is its single home
+- Virtual resolution **240×240 (1:1)**, **16px** tiles — one config constant is its single home. *(Human ruling 2026-09-04, superseding 240×320/3:4: the square screen leaves portrait room for the pseudo-GBC shell art/buttons, and landscape side bars for an alternate touch layout.)*
 - Crisp pixel-art rendering; integer scaling preferred (240×3 = 720); GBC shell is DOM/CSS around the canvas, not game code
 - Phone-perfect by the vertical slice (Milestone 3): iOS Safari quirks, memory, texture atlases are Unit 21 topics
 
 ## Tooling plans by semester (from the syllabus)
 
-Tiled for tilemaps (Unit 2) · spreadsheet→JSON content pipeline for 67 moves / 92 instances / 15+ wilds (Unit 18) · chiptune / Web Audio pipeline, the Chase sting, the Hum motif (Unit 19) · UI scenes, menus, Codex, pouch, shell polish (Unit 20) · profiling & mobile QA (Unit 21) · packaging & platform certs (Unit 22) · playtest telemetry for the Watchlist (Unit 23)
+Tiled **1.11.90 (installed 2026-09-04)** for tilemaps (Unit 2) · spreadsheet→JSON content pipeline for 67 moves / 92 instances / 15+ wilds (Unit 18) · chiptune / Web Audio pipeline, the Chase sting, the Hum motif (Unit 19) · UI scenes, menus, Codex, pouch, shell polish (Unit 20) · profiling & mobile QA (Unit 21) · packaging & platform certs (Unit 22) · playtest telemetry for the Watchlist (Unit 23)
 
 ## Environment snapshot (updated 2026-09-03, post first push)
 
@@ -34,6 +34,14 @@ Tiled for tilemaps (Unit 2) · spreadsheet→JSON content pipeline for 67 moves 
 - **Code style (user ruling 2026-09-03):** semicolon-free (relying on ASI), commas only where required; filenames lowercase everywhere; no linter/formatter yet — a Prettier elective can enforce the style mechanically later
 - **Elthen fox sheet map (measured):** 448×224 = 14 columns × 7 rows of 32×32 frames; walk = row 2 (frames 28–35), idle = row 0 (frames 0–4); fox body inside the frame = 20×15 at +6,+17 (also the arcade collision body)
 - Desk monitor is a **CRT** — adaptive FIT + autoRound scaling chosen accordingly; CRTs are forgiving for pixel-art scaling
+
+## Phaser engine notes (learned from shipped source/types — the standing rule paying off)
+
+- **Typed caches:** loaded files land in per-type caches (`cache.json`, `cache.tilemap`, `cache.image`, …). `tilemapTiledJSON` stores a **wrapper `{ format, data }`** in `cache.tilemap` (TilemapJSONFile.js line 54) — the raw Tiled JSON lives under `.data`. Prefer reading from the `Tilemap` object (`make.tilemap({ key })` → `map.tileWidth` etc.) over peering into caches.
+- **Tiled authoring contract:** export maps with tilesets **embedded** (external `.tsx` references don't survive to the browser — the JSON must be self-contained). `addTilesetImage(name-in-map-data, image-key)` — the *name field*, never the `.tsx` filename.
+- **Display order:** equal `depth` (default 0) renders by insertion order; higher depth renders on top. `branches.setDepth(1)` is the above-player canopy layer — the general "walks behind" recipe for signs, railings, house fronts.
+- **Camera:** `startFollow(target, roundPixels, lerpX, lerpY)`. Lerp 1 = hard-locked — **ruled the accurate GBC feel (2026-09-04)**. Low lerp exposes sub-pixel rounding jitter (two independently rounded floats: `world − scroll`); real GB hardware scrolled whole pixels only, making the artifact impossible on-target — a standing argument for grid-locked movement.
+- **`Phaser.Scale.FIT` + `autoRound`** is the adaptive scaling mode (replaces fixed zoom; CRT-friendly).
 
 ## Infrastructure decisions (resolved 2026-09-03)
 

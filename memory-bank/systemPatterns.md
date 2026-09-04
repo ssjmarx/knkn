@@ -4,7 +4,7 @@
 
 ## The six locked architecture decisions
 
-1. **Virtual resolution 240×320 (3:4), 16px tiles.** 15×20 tiles visible — "GBC energy on a modern screen," not emulation. Integer scaling stays clean (240×3 = 720, fits phone widths). Lives in **one config constant**; a later switch to 3:5 (240×400, also tile-clean) is a one-line edit, decided with real art in front of us.
+1. **Virtual resolution 240×320 (3:4), 16px tiles.** 15×20 tiles visible — "GBC energy on a modern screen," not emulation. Integer scaling stays clean (240×3 = 720, fits phone widths). Lives in **one config constant**; a later switch to 3:5 (240×400, also tile-clean) is a one-line edit, decided with real art in front of us. **[Ruled 2026-09-04: now 240×240 (1:1), 15×15 tiles — portrait shell/button space, landscape side-bar controls. Same single home in `config.ts`.]**
 2. **The page is the Game Boy.** The Phaser canvas is the screen; buttons, bezel, and shell are HTML/CSS *around* it. Touch handling stays DOM-simple; desktop just hides the shell. The GBC plastic is a stylesheet, not game code.
 3. **The logic core knows nothing about Phaser.** Damage math, Wane decay, the initiative queue, mastery ladders — pure TypeScript functions and data, zero engine imports. Payoffs: unit-testable (the Rule of 500 gets real tests, Unit 6) and portable to any future engine. **Phaser renders; the core decides.**
 4. **Everything is a table.** Typechart, moves, rites, stones, ladders, schedules, dialogue flags — JSON files validated by TypeScript interfaces. Data-driven from day one; every table is a lesson in interfaces and unions.

@@ -13,13 +13,14 @@
 - **Deploy plan (open decision #5, resolved):** Cloudflare published app **`knkn.dunaway.io`**; Vite `base: '/'`; `dist/` served by an nginx container in Portainer on the personal server (`ssh server`) — same pattern as the human's other Phaser minigames
 - **Scaffold hand-built, committed, deployed (2026-09-03):** `.gitignore` · `package.json` (exact pins phaser 4.2.1 / TS 7.0.2 / Vite 8.2.2; `build` = `tsc && vite build` gate) · strict `tsconfig.json` · `vite.config.ts` (`base: '/'`, `server.host`) · `index.html` · `src/config.ts` (240×320/16px constants, one home) · `src/main.ts` (BootScene: Elthen placeholder fox on magenta). Commits: `e896e4c` (bank) + `3d36eef` (scaffold), both pushed to both remotes.
 - **UNIT 0 COMPLETE (2026-09-03):** first gated build, first deploy — "Hello Kon Kon" live at `knkn.dunaway.io` on the human's own infra (nginx/Portainer + Cloudflare tunnel).
-- **UNIT 1 COMPLETE (2026-09-03):** the fox walks — scene files `src/scenes/bootscene.ts` & `gamescene.ts`, Elthen sheet sliced (14×7 grid of 32×32), walk (row 2, frames 28–35) + idle (row 0, frames 0–4) anims, cursor-velocity movement with world-bounds collision, measured body (20×15 at +6,+17), FIT + autoRound scaling (CRT-friendly), facing flip. Break-its done; deployed and verified. Commits `6c58da1` → `d5b190a` → `6477d00`, all pushed. CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+- **UNIT 1 COMPLETE (2026-09-03):** the fox walks — scenes split into `src/scenes/`, Elthen sheet anims (walk row 2, idle row 0), cursor-velocity movement, world-bounds collision, FIT scaling, facing flip; commits `6c58da1` → `6477d00`, pushed.
+- **UNIT 2 COMPLETE (2026-09-04):** a real place — 30×30 Tiled map (`test_area.json`, embedded `town` tileset from Grumpy Function 8×8×2 placeholder art), tile-property collision, hard-locked camera (lerp 1, ruled), canopy layer (`branches.setDepth(1)`), boot-time tile-size validation via the `Tilemap` object. Virtual resolution now **240×240 (1:1)** per human ruling. Commits `77a243f` + `2c5e779`, pushed and deployed. `src/types.ts` currently unused (kept for Unit 7's data-validation work, or delete — human's call). CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
 ## What's next (the human's solo work — rest of Unit 0)
 
-1. **Unit 2 — Tiled tilemaps, collision, camera follow:** the world stops being a magenta rectangle; tile properties become walls; the camera learns to follow the fox. New tool: Tiled.
+1. **Unit 3 — the follower:** Kon Kon trails the player with GBC-style step-and-delay — the fox stops being the player and becomes the partner, per canon. Prerequisite: a *player-character* sprite (human child placeholder, 16×16-ish; license filed if third-party). TS payload: classes, `this`, modules, imports/exports.
 2. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
-3. Optional server tidy: `docker rm pihole` (the dead container).
+3. Optional: `docker rm pihole` (the dead container); decide the fate of `src/types.ts`.
 
 ## Open decisions (✎ — the human's, never the agent's)
 
