@@ -10,7 +10,7 @@ export class BootScene extends Phaser.Scene {
     this.load.spritesheet("fox", "assets/fox_sprite_sheet_elthens.png", {
       frameWidth: 32,
       frameHeight: 32
-    });
+    })
 
     // test map
     this.load.image("tiles", "assets/exterior_grumpyfunction.png")
@@ -26,7 +26,7 @@ export class BootScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("fox", { start: walkIndex, end: walkIndex + 7 }),
       frameRate: 10,
       repeat: -1
-    });
+    })
 
     this.anims.create({
       key: "fox-idle",

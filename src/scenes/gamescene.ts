@@ -1,6 +1,5 @@
 import Phaser from "phaser"
 import { GAME_WIDTH, GAME_HEIGHT, WALK_SPEED, TILE_SIZE } from "../config"
-import { TiledMapHead } from "../types"
 
 export class GameScene extends Phaser.Scene {
   private fox!: Phaser.Physics.Arcade.Sprite
@@ -11,16 +10,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
-    const head = this.cache.json.get("map") as TiledMapHead
-    if (head.tilewidth !== TILE_SIZE || head.tileheight !== TILE_SIZE) {
-      throw new Error(`map tiles are ${head.tilewidth}px but TILE_SIZE is ${TILE_SIZE} — the map and the code disagree`)
-    }
-
     const map = this.make.tilemap({ key: "map" })
-    const tileset = map.addTilesetImage("town", "tiles")
-    const ground = map.createLayer("ground", tileset!)
-    const walls = map.createLayer("walls", tileset!)
+    if (map.tileWidth !== TILE_SIZE || map.tileHeight !== TILE_SIZE) {
+      throw new Error(`map tiles are ${map.tileWidth}px but TILE_SIZE is ${TILE_SIZE} — the map and the code disagree`)
+    }
+    const tileset = map.addTilesetImage("town", "tiles")!
+    const ground = map.createLayer("ground", tileset)
+    const walls = map.createLayer("walls", tileset)
+    const branches = map.createLayer("branches", tileset)
     walls.setCollisionByProperty({ collides: true })
+    branches.setDepth(1)
 
     this.fox = this.physics.add.sprite(map.widthInPixels / 2, map.heightInPixels / 2, "fox")
     this.fox.body!.setSize(20, 15)
