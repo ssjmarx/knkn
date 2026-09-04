@@ -13,7 +13,7 @@
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 dev env & first deploy — *in progress (repo, identity fix, dual-push remotes, first push, Node 24.20.0 LTS switch, hand scaffold — ALL DONE; Hello Kon Kon sprite, first code commit, first deploy pending)* · U1 scene/sprite/game loop/movement · U2 Tiled tilemaps, collision, camera · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
+- **S1 Foundations "The Walk":** U0 dev env & first deploy — **✅ DONE 2026-09-03** ("Hello Kon Kon" live at knkn.dunaway.io; optional unguided challenge outstanding) · U1 scene/sprite/game loop/movement — *next* · U2 Tiled tilemaps, collision, camera · U3 the follower · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -29,6 +29,10 @@
 - **2026-09-03** — Node switched v25.5.0 (non-LTS) → **v24.20.0 LTS** (NodeSource repo repaired `node_22.x`→`node_24.x`, apt downgrade); npm 11.19.0
 - **2026-09-03** — Hand scaffold built & agent-reviewed: `.gitignore`, `package.json` (exact pins phaser 4.2.1 / typescript 7.0.2 / vite 8.2.2), strict `tsconfig.json`, `vite.config.ts`, `index.html`, `src/config.ts`, `src/main.ts`; `npm install` clean; typecheck green (not yet committed)
 - **2026-09-03** — Deploy leg provisioned by the human: Portainer container **`knkn-web`** (nginx:alpine, volume `~/opt/web/knkn` → web root, `web` network, duplicated from the phix container) + Cloudflare published-app route for `knkn.dunaway.io` registered
+- **2026-09-03** — First code commits pushed to both remotes: `e896e4c` (bank rulings) + `3d36eef` (scaffold); first gated build (`tsc && vite build`) passed
+- **2026-09-03** — **UNIT 0 COMPLETE:** `dist/` rsynced to `~/opt/web/knkn` — **"Hello Kon Kon" live at knkn.dunaway.io**, on the human's own infra, first deploy of the course
+- **2026-09-03** — Asset licensing convention adopted: `licenses/` folder + source-tagged filenames; first entry Elthen's fox sprite pack (placeholder — bespoke Kon Kon art required)
+- **2026-09-03** — Server DNS incident resolved: Pi-hole leftovers (stale `127.0.0.1` + `chattr +i` lock) removed from `/etc/resolv.conf`, repointed to 1.1.1.1/8.8.8.8, re-locked; rsync installed on the server; `~/opt/web/knkn` chowned
 
 ## Decision log
 
@@ -51,7 +55,8 @@
 | 2026-09-03 | Deploy topology confirmed: each game = own Portainer nginx:alpine container volume-mounted from `~/opt/web/<game>` (pointdefense, phix — plain JS); `knkn-web` provisioned + Cloudflare route registered; deploy = build + copy `dist/` to `~/opt/web/knkn/` | user directive |
 | 2026-09-03 | **Character customization added to canon (post-lock ruling, `design.md` §18):** player 2–6 sprite variants with GBC-limited palette variations; Kon Kon one sprite set, two color variations (fur + tail tips/underbelly) slightly *breaking* GBC limits as a diegetic hint of otherworldliness; both renamable (classic rename screen) | user ruling |
 | 2026-09-03 | GBC shell aesthetic (Unit 20): purple shell with visible-circuitry vibe, nothing legally identifying; multiple options, default TBD | user ruling |
+| 2026-09-03 | Asset licensing convention: every third-party asset gets its license copied into `licenses/` and a source-tagged filename (e.g. `_elthens`); placeholder fox = Elthen's pack (32×32, non-GBC, not two-tone-ready — bespoke Kon Kon art required) | user directive |
 
 ## Not started
 
-Everything else: units U1–U23 (U0 in progress — Hello Kon Kon, first code commit, first deploy, CI pending), all milestones.
+Everything else: units U1–U23 (U1 is next), all milestones, CI.

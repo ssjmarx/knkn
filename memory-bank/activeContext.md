@@ -11,17 +11,15 @@
   - Mirror: `git@github.com:ssjmarx/knkn.git` — same key, registered on the GitHub account (`ssjmarx`)
   - Transport ruling: **SSH everywhere — no tokens, no credential helpers** (an HTTPS-via-Tailscale remote was tried first, hit credential friction, and was superseded the same day)
 - **Deploy plan (open decision #5, resolved):** Cloudflare published app **`knkn.dunaway.io`**; Vite `base: '/'`; `dist/` served by an nginx container in Portainer on the personal server (`ssh server`) — same pattern as the human's other Phaser minigames
-- **Scaffold hand-built (2026-09-03, reviewed & approved, not yet committed):** `.gitignore` · `package.json` (exact pins phaser 4.2.1 / TS 7.0.2 / Vite 8.2.2; `build` = `tsc && vite build` as the CI gate) · strict `tsconfig.json` · `vite.config.ts` (`base: '/'`, `server.host` for phone testing) · `index.html` (page-is-the-Game-Boy) · `src/config.ts` (the 240×320 / 16px constants, one home) · `src/main.ts` (Phaser 4 boot, BootScene, magenta screen). `npm install` done, typecheck green.
-- No CI yet; first deploy pending. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+- **Scaffold hand-built, committed, deployed (2026-09-03):** `.gitignore` · `package.json` (exact pins phaser 4.2.1 / TS 7.0.2 / Vite 8.2.2; `build` = `tsc && vite build` gate) · strict `tsconfig.json` · `vite.config.ts` (`base: '/'`, `server.host`) · `index.html` · `src/config.ts` (240×320/16px constants, one home) · `src/main.ts` (BootScene: Elthen placeholder fox on magenta). Commits: `e896e4c` (bank) + `3d36eef` (scaffold), both pushed to both remotes.
+- **UNIT 0 COMPLETE (2026-09-03):** first gated build passed; `dist/` rsynced to the server's `~/opt/web/knkn`; **"Hello Kon Kon" is live at `knkn.dunaway.io`** on the human's own infra (nginx/Portainer + Cloudflare tunnel). CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
 ## What's next (the human's solo work — rest of Unit 0)
 
-1. Confirm the dev server shows the magenta screen (`npm run dev`; also try it from the phone over LAN — `server.host: true` is set for exactly that).
-2. **Segment 6 — "Hello Kon Kon":** the human makes a fox sprite (`public/assets/konkon.png`), wires `preload`/`create` in `BootScene`, break-it-on-purpose (bad asset key, missing file, misspelled import), then the first scaffold commit + push (both remotes).
-3. Deploy: `npm run build` → copy `dist/` into the server's `~/opt/web/knkn/` (needs `sudo chown ssjmarx: ~/opt/web/knkn` first — dir was created root-owned) → verify at `knkn.dunaway.io`.
-4. CI later (Gitea Actions is the natural candidate).
-
-**Done when:** "Hello Kon Kon" is live at knkn.dunaway.io.
+1. *(Optional)* **Unit 0 challenge:** fox in the bottom-left corner, non-magenta background, no magic numbers — unguided, using only Unit 0 knowledge.
+2. **Unit 1 — a scene, a sprite, the game loop, movement:** an arrow-key walking fox (the Elthen sprite sheet is already staged in `public/assets/`); TS concepts: `let`/`const`, primitives, functions, the Phaser game loop.
+3. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
+4. Optional server tidy: `docker rm pihole` (the dead container).
 
 ## Open decisions (✎ — the human's, never the agent's)
 
@@ -43,7 +41,7 @@ Infrastructure (added 2026-09-03):
 - The `gitea` alias on eMachine points at the server's **LAN IP** — fine at home; pushes from off-LAN (over Tailscale) would need a host block using the Tailscale IP.
 - A GitHub PAT sits in **plaintext in eMachine's `~/.bash_history` (~line 1640)** — unused now that everything is SSH; mint-and-scrub if ever needed.
 - Global gitconfig still carries `squeejee09@gmail.com` (repo-local config overrides it with `SSJMarx@dunaway.io`); other new repos will default to the Gmail identity unless the human changes the global.
-- `~/opt/web/knkn` on the server was created **root-owned** — `sudo chown ssjmarx:` it before the first deploy (deploy = copy `dist/` into it).
+- ~~`~/opt/web/knkn` root-owned~~ — chowned 2026-09-03. The dead `pihole` container still sits on the server (Exited) — optional `docker rm` tidy.
 - Design watch items live in the Prototype Watchlist (`design.md` §16) — relevant once battles exist; anything touching the Wane economy is auto-added.
 
 ## Session protocol
