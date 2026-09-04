@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT, VIEW_SCALE } from "./config";
+import { GAME_WIDTH, GAME_HEIGHT } from "./config";
 import { BootScene } from "./scenes/bootscene";
 import { GameScene } from "./scenes/gamescene";
 
@@ -15,7 +15,8 @@ const config: Phaser.Types.Core.GameConfig = {
     arcade: { gravity: { x: 0, y: 0 } },
   },
   scale: {
-    zoom: VIEW_SCALE,
+    mode: Phaser.Scale.FIT,
+    autoRound: true,
   },
   scene: [BootScene, GameScene],
 };

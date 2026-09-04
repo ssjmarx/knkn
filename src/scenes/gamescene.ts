@@ -12,9 +12,11 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.fox = this.physics.add.sprite(GAME_WIDTH / 2, GAME_HEIGHT / 2, "fox");
     this.fox.setCollideWorldBounds(true);
+    this.fox.body!.setSize(20, 15);
+    this.fox.body!.setOffset(6, 17);
 
     this.cursors = this.input.keyboard!.createCursorKeys();
-    this.fox.play("fox-walk");
+    this.fox.play("fox-idle")
   }
 
   override update(): void {
@@ -23,6 +25,18 @@ export class GameScene extends Phaser.Scene {
 
     this.fox.setVelocityX(vx * WALK_SPEED);
     this.fox.setVelocityY(vy * WALK_SPEED);
+
+    if (Math.abs(vx) > 0 || Math.abs(vy) > 0) {
+        this.fox.play("fox-walk", true)
+    } else {
+        this.fox.play("fox-idle", true)
+    }
+
+    if (vx < 0) {
+        this.fox.setFlipX(true)
+    } if (vx > 0) {
+        this.fox.setFlipX(false)
+    }
   }
 }
 

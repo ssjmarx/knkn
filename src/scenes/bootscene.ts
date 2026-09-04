@@ -14,15 +14,22 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    const walkRow = 2;
-    const first = walkRow * 14;
+    const walkRow = 28
+    const idleRow = 0
 
     this.anims.create({
       key: "fox-walk",
-      frames: this.anims.generateFrameNumbers("fox", { start: first, end: first + 7 }),
+      frames: this.anims.generateFrameNumbers("fox", { start: walkRow, end: walkRow + 7 }),
       frameRate: 10,
       repeat: -1,
     });
+
+    this.anims.create({
+      key: "fox-idle",
+      frames: this.anims.generateFrameNumbers("fox", { start: idleRow, end: idleRow + 4 }),
+      frameRate: 6,
+      repeat: -1,
+    })
 
     this.scene.start("Game");
   }
