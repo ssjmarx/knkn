@@ -11,6 +11,10 @@ export class BootScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+
+    // test map
+    this.load.image("tiles", "assets/exterior_grumpyfunction.png")
+    this.load.tilemapTiledJSON("map", "assets/test_area.json")
   }
 
   create(): void {
