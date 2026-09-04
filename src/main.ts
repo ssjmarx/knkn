@@ -1,19 +1,7 @@
 import Phaser from "phaser";
-import { GAME_WIDTH, GAME_HEIGHT } from "./config";
-
-class BootScene extends Phaser.Scene {
-  constructor() {
-    super("Boot");
-  }
-
-  preload(): void {
-    this.load.image("fox_single", "assets/fox_single_elthens.png");
-  }
-
-  create(): void {
-    this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "fox_single");
-  }
-}
+import { GAME_WIDTH, GAME_HEIGHT, VIEW_SCALE } from "./config";
+import { BootScene } from "./scenes/bootscene";
+import { GameScene } from "./scenes/gamescene";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -22,7 +10,14 @@ const config: Phaser.Types.Core.GameConfig = {
   height: GAME_HEIGHT,
   pixelArt: true,
   backgroundColor: "#ff00ff",
-  scene: [BootScene],
+  physics: {
+    default: "arcade",
+    arcade: { gravity: { x: 0, y: 0 } },
+  },
+  scale: {
+    zoom: VIEW_SCALE,
+  },
+  scene: [BootScene, GameScene],
 };
 
 new Phaser.Game(config);
