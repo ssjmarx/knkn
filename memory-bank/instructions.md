@@ -1,4 +1,4 @@
-# .clinerules — Agent Rules for the KON KON Repository
+# instructions — Agent Rules for the KON KON Repository
 
 **KON KON is a learning project. These rules are non-negotiable guardrails. Read this file, then the full memory bank, before doing anything.**
 

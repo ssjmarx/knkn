@@ -2,9 +2,9 @@
 
 > The living file. Future agents: read this after the brief/context files; update it at session end. Date every entry. Facts only.
 
-## Current state (2026-09-03, end of session — first push landed)
+## Current state (updated 2026-09-05 — Unit 5 in progress)
 
-- **Phase: Unit 0 well underway.** Branch `master`, three commits, clean tree, in sync with `origin/master`.
+- **Phase: Unit 5 (dialogue engine + flag store) in progress.** Branch `master`, HEAD `bb32b14` ("memory bank: Unit 4 complete") pushed to both remotes; the U5 lab code sits **uncommitted** in the tree (see the 2026-09-05 session update at the bottom of this file).
   - `a6a4773` — initial commit (`.clinerules` + memory bank + the original `planning/` docs) · `d3ab399` — `planning/` retired · `ddfc91f` — bank sync ("teh fix"); history rewritten 2026-09-03 so every commit now carries the real identity `SSJMarx <SSJMarx@dunaway.io>`
 - **Remotes live, first push done (2026-09-03).** `origin` fetches from Gitea and carries **two push URLs**, so one `git push` hits both:
   - Primary: `gitea:ssjmarx/knkn.git` — SSH alias (per-machine, defined in `~/.ssh/config` → server LAN IP, port 2222, user `git`), key `~/.ssh/id_ed25519` (Gitea key name "eMachine"); web UI at `https://git.dunaway.io/ssjmarx/knkn` (behind Cloudflare Access; Tailscale-direct `http://100.81.193.81:3000`)
@@ -20,7 +20,7 @@
 
 ## What's next (the human's solo work)
 
-1. **Unit 5 — dialogue engine + flag store (the LAST unit before Milestone 1):** data-driven JSON dialogue; TS payload: generics, `Record`, `keyof`, first discriminated unions. An NPC says different things based on flags — and the `justPressed` edges built in U4 finally get their consumer.
+1. **Finish Unit 5 — dialogue engine + flag store (the LAST unit before Milestone 1):** lab code is built (2026-09-05, uncommitted); remaining — formalize the lesson (generics, `Record`, `keyof`, first discriminated unions), the review follow-ups listed in the 2026-09-05 session update (duplicate `Flags` type; dialogue input not yet on `InputSource`), break-it-on-purpose, challenge, then commit & deploy.
 2. **Milestone 1 finish line:** day/night tint (the last M1 requirement after U5) — then **The Walk ships**: one map, follower, tint, dialogue tree, three input modes, deployed.
 3. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
 4. Optional tidy: `docker rm pihole` (the dead container).
@@ -62,3 +62,12 @@ At the end of every session: update this file and `progress.md` (dated, factual)
 - **Ruling (2026-09-04): fox collision removed.** An earlier pass added a fox wall collider + `setCollideWorldBounds`; on further review the human removed both. Rationale: the fox follows positions the player's own collision already validated, so corner clipping is unnoticeable, while a collider made the follower a bug factory (stuck against geometry no matter the hitbox size/offset — the trail point can sit across a wall corner). The follower is a *visual echo of the player's legal path*, not a constrained body. Consequence accepted: with no world-bounds clamp, the fox can trail up to FOLLOW_GAP (16px) past the player's legal positions — still inside the 30×30 map border. The body-size/offset follow-up is moot with no collider.
 - **Agent review cleanups all done (2026-09-04, human-typed):** `Point2` now imported from `trail.ts` (duplicate removed); dead code trimmed (`stillFrames`, `Trail.at()`, `Trail.atDistance()`); the sprite-anchor y-offset named `SPRITE_Y_OFFSET` in `fox.ts`.
 - **Git state at session note:** Unit 3 work is **uncommitted** (modified: `config.ts`, `bootscene.ts`, `gamescene.ts`; new: `fox.ts`, `player.ts`, `trail.ts`, PC asset + license). Commit & deploy step of Unit 3 pending.
+
+## Session update (2026-09-05 — Unit 5 lab built; bank resync)
+
+- **Unit 5 (dialogue engine + flag store) IN PROGRESS — lab code built, all uncommitted.** New files: `src/dialogue.ts` (types `Flags`/`DialogueChoice`/`Dialogue` — text may be a flag-reading function; type guards `isDialogue`/`isDialogueLine`), `src/dialogues.ts` (sample data: choices, flag-conditional text, `onComplete` callbacks), `src/dialoguesystem.ts` (`DialogueSystem extends Phaser.Scene` — a parallel scene, realizing locked decision #6's separate-UI-scene note), `src/flags.ts` (pure store: `createFlags`/`setFlag`/`getFlag`/`hasFlag`/`resetFlags`). Modified: `gamescene.ts` (launches the scene; semi-transparent red 64×64 test trigger at (200,100) carrying dialogue via `setData`; `checkDialogueTrigger()` with enter-edge detection via `wasInsideTrigger`), `main.ts` (scene registered), `index.html` (two CSS comments trimmed only).
+- **Status ruled by the human (2026-09-05): U5 stays 🟨 in progress** — the lab code exists, but the lesson/review/challenge steps aren't done. `dist/` is still the 2026-09-04 build: nothing dialogue-related is committed or deployed.
+- **Unrecorded review session recovered:** `dialoguesystem.ts` carries numbered fix comments (#4–#8) — prompt text resolves on choice pages too; explicit container hit-areas so `pointerdown` fires; `onComplete` unified into `advance()`; consecutive choice pages can't stack. These fixes predate this bank sync.
+- **Review follow-ups surfaced (human to type, not yet done):** `Flags` is defined twice (`dialogue.ts` + `flags.ts` — one home needed; same lesson as Unit 3's `Point2`); dialogue input is **keyboard-only** (raw Z/X/arrows via `addKey`) — not routed through `InputSource`/`CompositeInput`, so touch and gamepad can't drive dialogue yet; `dialogues.ts` uses trailing commas in multiline objects, a loose fit with the "commas only where required" style ruling (human to rule).
+- **Ruling (2026-09-05): dual agent-rules files are deliberate.** `.clinerules` (header retitled "instructions") serves the Cline plugin; a full copy at `memory-bank/instructions.md` serves another agent.
+- **`memory-bank/projectMap.md` adopted:** repo tree snapshot excluding `.git/`, `node_modules/`, `dist/`; regenerated this date (the human's first save was already stale). Next session: the human writes a script to regenerate it automatically.

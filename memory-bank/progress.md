@@ -6,14 +6,14 @@
 
 | # | Milestone | Semester gate | Done when | Status |
 |---|---|---|---|---|
-| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U4 done) |
+| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U4 done; U5 lab built) |
 | 2 | **The boss fight** | S2 final | Scripted boss: base form + two stones, Wane visible on screen, transformation live, win/lose screens | ⬜ not started |
 | 3 | **The vertical slice** | S3 | One town, one stone quest, one scaling guardian, phone-perfect, deployed | ⬜ not started |
 | 4 | **The demo** | S4 | Next Fest-ready public demo → content grind to v1.0 | ⬜ not started |
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — **✅ DONE 2026-09-04** (cleanups committed in `62a5b51`) · U4 input abstraction — **✅ DONE 2026-09-04** (keyboard + touch + gamepad all confirmed live) · U5 dialogue engine + flag store — *next*
+- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — **✅ DONE 2026-09-04** (cleanups committed in `62a5b51`) · U4 input abstraction — **✅ DONE 2026-09-04** (keyboard + touch + gamepad all confirmed live) · U5 dialogue engine + flag store — **🟨 IN PROGRESS 2026-09-05** (lab code built, uncommitted; lesson/review/challenge + commit & deploy pending)
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -41,6 +41,7 @@
 - **2026-09-04** — **The follower algorithm, as iterated by the human:** frame-delay replay → euclidean gap (warped on path folds) → **arc-length targeting** (measure along the path, interpolate the remainder — the human's design) → **steering follower** (Fox as arcade body chasing the arc-length target — final form, ruled smooth). Meta-lesson: write the screen-position algebra before applying pixel-art folklore (a `Math.round`-anchoring attempt manufactured jitter by breaking the camera's exact player-position cancellation)
 - **2026-09-04** — **U4 pre-started by the human:** `src/input.ts` — `InputSource` interface (`x/y` axis readouts) + `KeyboardInput implements InputSource`, consumed polymorphically by `Player.move`
 - **2026-09-04** — **UNIT 4 COMPLETE:** one game, three hands — `InputSource` interface (axes + `isDown`/`justPressed`/`endFrame`); `KeyboardInput` (cursors + ENTER/ESC, `JustDown` edges); `TouchInput` (DOM shell buttons, `elementFromPoint` slide-retargeting, `Map<pointerId, button|null>` multi-touch with null-as-dead-zone-state, pressed-class feedback); `GamepadInput` (manual 0.15 deadzone — `setAxisThreshold` is per-pad, not per-plugin; rising-edge `justPressed` via `wasDown`); `CompositeInput` as the scene's composition root; landscape fixed-overlay + `100dvh`. **Done-when confirmed by the human: keyboard, phone (portrait + landscape), and gamepad all walk the fox, live at knkn.dunaway.io.** Commits `62a5b51` → `6030197`, pushed and deployed
+- **2026-09-05** — **U5 LAB BUILT (unit still in progress):** dialogue engine + flag store — `src/dialogue.ts` (types + type guards; dialogue text may be a flag-reading function), `src/dialogues.ts` (sample data: choices, flag-conditional text, `onComplete`), `src/dialoguesystem.ts` (`DialogueSystem` parallel scene — prompt text, choice buttons with pointer + keyboard nav, explicit container hit-areas, `onComplete` unified in `advance()`), `src/flags.ts` (pure store), red test trigger + enter-edge detection (`wasInsideTrigger`) in `gamescene.ts`. Uncommitted; not deployed (`dist/` still the 09-04 build). Remaining: lesson formalization, review follow-ups (duplicate `Flags` type; dialogue input not yet on `InputSource`), break-it/challenge, commit & deploy
 
 ## Decision log
 
@@ -74,9 +75,12 @@
 | 2026-09-04 | Follower architecture: **Fox as an arcade-physics steering follower** (`chase` P-controller toward the arc-length trail target) — replaces position-replay; collision ruling recorded separately above | user ruling |
 | 2026-09-04 | Placeholder character: Super Retro World free characters pack (16×20 frames, 9×4 grid, character 1; whitespace removed from source sheet); license filed — 3rd `licenses/` entry | user action |
 | 2026-09-04 | U4 pre-started: `InputSource` interface + `KeyboardInput` built independently by the human; the formal U4 lesson formalizes it (literal unions, narrowing, enums, more sources) | user action |
+| 2026-09-05 | U5 status ruled: **in progress** — lab code built, but lesson/review/challenge steps not yet done; nothing committed or deployed | user ruling |
+| 2026-09-05 | Dual agent-rules files, deliberate: `.clinerules` (header retitled "instructions") = the Cline plugin's copy; full copy at `memory-bank/instructions.md` = another agent's copy | user ruling |
+| 2026-09-05 | `memory-bank/projectMap.md` adopted — repo tree snapshot excluding `.git/`, `node_modules/`, `dist/`; regenerated this date; a script to auto-regenerate it is planned next session | user action |
 
 - **2026-09-04** — **Unit 3 cleanups (uncommitted at entry time; since folded into the U4 pre-start):** review cleanups applied (Point2 type-only import, dead-code trim, named `SPRITE_Y_OFFSET`); fox body-size fix ruled moot (no collider); commit & deploy of the trailing changes was the remaining step
 
 ## Not started
 
-Everything else: units U5–U23 (U5 is next), milestones 1–4 (M1 in progress — U5 + day/night tint remain), CI.
+Everything else: units U6–U23 (U5 in progress), milestones 1–4 (M1 in progress — U5 completion + day/night tint remain), CI.
