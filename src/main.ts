@@ -8,6 +8,9 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: "game",
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
+  input: {
+    gamepad: true
+  },
   pixelArt: true,
   backgroundColor: "#ff00ff",
   physics: {

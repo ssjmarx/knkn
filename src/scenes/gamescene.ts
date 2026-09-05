@@ -3,13 +3,16 @@ import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP } from "../config"
 import { Trail } from "../trail"
 import { Player } from "../player"
 import { Fox } from "../fox"
-import { KeyboardInput } from "../input"
+import { KeyboardInput, InputSource } from "../input"
+import { TouchInput } from "../touchinput"
+import { CompositeInput } from "../compositeinput"
+import { GamepadInput } from "../gamepadinput"
 
 export class GameScene extends Phaser.Scene {
   private player!: Player
   private fox!: Fox
   private trail!: Trail
-  private controls!: KeyboardInput
+  private controls!: InputSource
 
   constructor() {
     super("Game")
@@ -42,7 +45,11 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.cameras.main.startFollow(this.player.sprite, true)
 
-    this.controls = new KeyboardInput(this)
+    this.controls = new CompositeInput(
+      new KeyboardInput(this),
+      new TouchInput(document.getElementById("controls")!),
+      new GamepadInput(this)
+    )
   }
 
 override update(): void {
@@ -67,5 +74,7 @@ override update(): void {
     } else if (vx > 0.5) {
       this.fox.sprite.setFlipX(false)
     }
+
+    this.controls.endFrame()
   }
 }

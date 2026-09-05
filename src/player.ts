@@ -1,11 +1,11 @@
-import type { InputSource } from "./input"
+import type { Direction, InputSource } from "./input"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
 const SHEET_COLUMNS = 9 // total columns in sprite sheet
 
 export class Player {
   readonly sprite: Phaser.Physics.Arcade.Sprite
-  private facing = "down"
+  private facing: Direction = "down"
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.sprite = scene.physics.add.sprite(x, y, "pc")
@@ -48,7 +48,7 @@ export class Player {
   }
 
   private standFrame(): number {
-    const rowIndex = { down: 0, left: 1, right: 2, up: 3 }[this.facing] ?? 0
+    const rowIndex = { down: 0, left: 1, right: 2, up: 3 }[this.facing]
     return rowIndex * SHEET_COLUMNS + STAND_COLUMN
   }
 }
