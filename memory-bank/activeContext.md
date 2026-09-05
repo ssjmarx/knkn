@@ -1,28 +1,20 @@
 # Active Context — where we are right now
 
 > The living file. Future agents: read this after the brief/context files; update it at session end. Date every entry. Facts only.
+> **Retention (ruled 2026-09-05):** keep detailed history only for the last two units — older unit history compresses to one-liners; the unit tracker and decision log in `progress.md` carry the durable facts; deep history lives in git.
 
-## Current state (updated 2026-09-05 — Unit 5 in progress)
+## Current state (2026-09-05, end of session — Unit 5 complete)
 
-- **Phase: Unit 5 (dialogue engine + flag store) in progress.** Branch `master`, HEAD `bb32b14` ("memory bank: Unit 4 complete") pushed to both remotes; the U5 lab code sits **uncommitted** in the tree (see the 2026-09-05 session update at the bottom of this file).
-  - `a6a4773` — initial commit (`.clinerules` + memory bank + the original `planning/` docs) · `d3ab399` — `planning/` retired · `ddfc91f` — bank sync ("teh fix"); history rewritten 2026-09-03 so every commit now carries the real identity `SSJMarx <SSJMarx@dunaway.io>`
-- **Remotes live, first push done (2026-09-03).** `origin` fetches from Gitea and carries **two push URLs**, so one `git push` hits both:
-  - Primary: `gitea:ssjmarx/knkn.git` — SSH alias (per-machine, defined in `~/.ssh/config` → server LAN IP, port 2222, user `git`), key `~/.ssh/id_ed25519` (Gitea key name "eMachine"); web UI at `https://git.dunaway.io/ssjmarx/knkn` (behind Cloudflare Access; Tailscale-direct `http://100.81.193.81:3000`)
-  - Mirror: `git@github.com:ssjmarx/knkn.git` — same key, registered on the GitHub account (`ssjmarx`)
-  - Transport ruling: **SSH everywhere — no tokens, no credential helpers** (an HTTPS-via-Tailscale remote was tried first, hit credential friction, and was superseded the same day)
-- **Deploy plan (open decision #5, resolved):** Cloudflare published app **`knkn.dunaway.io`**; Vite `base: '/'`; `dist/` served by an nginx container in Portainer on the personal server (`ssh server`) — same pattern as the human's other Phaser minigames
-- **Scaffold hand-built, committed, deployed (2026-09-03):** `.gitignore` · `package.json` (exact pins phaser 4.2.1 / TS 7.0.2 / Vite 8.2.2; `build` = `tsc && vite build` gate) · strict `tsconfig.json` · `vite.config.ts` (`base: '/'`, `server.host`) · `index.html` · `src/config.ts` (240×320/16px constants, one home) · `src/main.ts` (BootScene: Elthen placeholder fox on magenta). Commits: `e896e4c` (bank) + `3d36eef` (scaffold), both pushed to both remotes.
-- **UNIT 0 COMPLETE (2026-09-03):** first gated build, first deploy — "Hello Kon Kon" live at `knkn.dunaway.io` on the human's own infra (nginx/Portainer + Cloudflare tunnel).
-- **UNIT 1 COMPLETE (2026-09-03):** the fox walks — scenes split into `src/scenes/`, Elthen sheet anims (walk row 2, idle row 0), cursor-velocity movement, world-bounds collision, FIT scaling, facing flip; commits `6c58da1` → `6477d00`, pushed.
-- **UNIT 2 COMPLETE (2026-09-04):** a real place — 30×30 Tiled map (`test_area.json`, embedded `town` tileset from Grumpy Function 8×8×2 placeholder art), tile-property collision, hard-locked camera (lerp 1, ruled), canopy layer (`branches.setDepth(1)`), boot-time tile-size validation via the `Tilemap` object. Virtual resolution now **240×240 (1:1)** per human ruling. Commits `77a243f` + `2c5e779`, pushed and deployed.
-- **UNIT 3 COMPLETE (2026-09-04):** the follower — `Trail` (pure breadcrumb path, dedup push, arc-length interpolation), `Player` (InputSource-driven, 4-direction anims, diagonal normalization), `Fox` (arcade-physics steering follower — `chase` P-controller; no wall collider, ruled acceptable). Algorithm arc: frame-delay → euclidean gap → arc-length → steering (each step user-driven). Commits `e8c92e7` → `4b7e58a`, pushed.
-- **UNIT 4 COMPLETE (2026-09-04):** one game, three hands — `InputSource` (axes + `isDown`/`justPressed`/`endFrame`); `KeyboardInput` (JustDown edges), `TouchInput` (DOM shell buttons, elementFromPoint slide-retargeting, `Map<pointerId, button|null>` multi-touch, pressed feedback), `GamepadInput` (manual deadzone, rising-edge justPressed), `CompositeInput` composition root; landscape overlay + `100dvh`. **Done-when confirmed: keyboard, phone (portrait + landscape), gamepad — all live at knkn.dunaway.io.** Commits `62a5b51` → `6030197`, pushed and deployed. CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+- **Phase: Milestone 1 finish line.** U0–U5 complete. Remaining for M1: the flag→dialogue challenge (folded in from U5) + the day/night tint — then **The Walk ships** (one map, follower, tint, dialogue tree, three input modes, deployed).
+- **Git/deploy:** branch `master`, HEAD `8835961`, tree clean, in sync with `origin/master` (Gitea primary + GitHub mirror — full topology in `techContext.md`). Latest deploy **2026-09-05 15:24, verified on the server** (`~/opt/web/knkn`) — the dialogue build is live at knkn.dunaway.io. CI not yet built.
+- **Unit one-liners (detail → `progress.md`):** U0 dev env + scaffold (09-03) · U1 walking fox (09-03) · U2 Tiled world + 240×240 ruling (09-04) · U3 the follower (09-04) · U4 three-mode input (09-04) · U5 dialogue engine + flag store + the one-pad input map (09-05).
+- The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
 ## What's next (the human's solo work)
 
-1. **Finish Unit 5 — dialogue engine + flag store (the LAST unit before Milestone 1):** lab code is built (2026-09-05, uncommitted); remaining — formalize the lesson (generics, `Record`, `keyof`, first discriminated unions), the review follow-ups listed in the 2026-09-05 session update (duplicate `Flags` type; dialogue input not yet on `InputSource`), break-it-on-purpose, challenge, then commit & deploy.
-2. **Milestone 1 finish line:** day/night tint (the last M1 requirement after U5) — then **The Walk ships**: one map, follower, tint, dialogue tree, three input modes, deployed.
-3. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
+1. **M1 finish:** the U5 challenge — a second trigger whose choices set a flag, and the first NPC's text changes because of it (`text: (flags) => …` + `getFlag<T>`); then the day/night tint; then The Walk ships.
+2. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
+3. Cosmetic residuals from the U5 review, whenever: touchinput `endFrame` casts `Object.keys(...) as Action[]` (should be `Button[]` — works, but the type lies); unused `Direction` imports in `touchinput.ts` + `gamepadinput.ts`; stray trailing comma in `dialoguesystem.ts`'s dialogue import; `gamepadinput.ts` `endFrame` stray blank line.
 4. Optional tidy: `docker rm pihole` (the dead container).
 
 ## Open decisions (✎ — the human's, never the agent's)
@@ -34,10 +26,7 @@ From `design.md` §17:
 4. Pilgrim's eight phase-lines — "the game's best 80 words," to be written as a set
 5. Character customization & renaming — where/when the customization and rename screens live in the game flow (start of game vs. diegetic location) — added with the 2026-09-03 customization ruling (`design.md` §17–18)
 
-Infrastructure (added 2026-09-03):
-5. Deploy target — ~~resolved 2026-09-03: Cloudflare published app `knkn.dunaway.io`, static files via nginx/Portainer on the personal server; Vite `base: '/'`~~ (was: GitHub Pages / Netlify / Vercel / Cloudflare Pages)
-
-**Resolved 2026-09-03:** ~~#6 — rename `planning/` files to `.md`~~ — moot; the human deleted `planning/` entirely (preserved in git history), leaving the bank's `.md` mirrors as the sole copies.
+(Infrastructure open decisions #5 and #6 were both resolved 2026-09-03 — see the decision log in `progress.md`.)
 
 ## Watch items / reminders
 
@@ -52,22 +41,11 @@ Infrastructure (added 2026-09-03):
 
 At the end of every session: update this file and `progress.md` (dated, factual). Record rulings in the canon mirrors (`design.md`, `syllabus.md`) only when the human issues them. Full rules: `.clinerules`.
 
-## Session update (2026-09-04, continued — Unit 3 follower live, review cleanups done)
+## Session update (2026-09-05 — Unit 5 COMPLETE: one pad, one pipeline, dialogue live)
 
-- **Unit 3 in progress: the follower is live and smooth.** Kon Kon trails the player via a position-history `Trail` (`src/trail.ts`, `atPathDistance(FOLLOW_GAP)` path interpolation) and a new physics-driven `Fox` class (`src/fox.ts`, proportional steering: `step = min(speed, dist * GAIN)`, GAIN 16, STOP_RADIUS 1). Player gained diagonal normalization (`Math.SQRT1_2`). New PC sprite: Super Retro World free character (license filed in `licenses/`).
-- **Follower jitter — diagnosed and resolved (2026-09-04):**
-  - Original design placed the fox directly at an interpolated trail point in `update()` — sub-pixel jitter whenever the camera moved. Diagnosis: **rounding-phase mismatch** — the fox's float position and the camera's `roundPixels` scroll rounded at different sub-pixel phases; the player was immune because the camera centers on it (both roundings derive from the same number).
-  - First attempted fix (rounding the fox's target to whole pixels) made the jitter dramatically *worse* — it locked the fox's rounding phase against the camera's, confirming the mismatch theory by failing in the predicted direction.
-  - Resolution (human's design): fox became an Arcade physics sprite sharing the player's physics step and frame delta — one rounding left in the pipeline; smooth at lerp 1.
-- **Ruling (2026-09-04): fox collision removed.** An earlier pass added a fox wall collider + `setCollideWorldBounds`; on further review the human removed both. Rationale: the fox follows positions the player's own collision already validated, so corner clipping is unnoticeable, while a collider made the follower a bug factory (stuck against geometry no matter the hitbox size/offset — the trail point can sit across a wall corner). The follower is a *visual echo of the player's legal path*, not a constrained body. Consequence accepted: with no world-bounds clamp, the fox can trail up to FOLLOW_GAP (16px) past the player's legal positions — still inside the 30×30 map border. The body-size/offset follow-up is moot with no collider.
-- **Agent review cleanups all done (2026-09-04, human-typed):** `Point2` now imported from `trail.ts` (duplicate removed); dead code trimmed (`stillFrames`, `Trail.at()`, `Trail.atDistance()`); the sprite-anchor y-offset named `SPRITE_Y_OFFSET` in `fox.ts`.
-- **Git state at session note:** Unit 3 work is **uncommitted** (modified: `config.ts`, `bootscene.ts`, `gamescene.ts`; new: `fox.ts`, `player.ts`, `trail.ts`, PC asset + license). Commit & deploy step of Unit 3 pending.
-
-## Session update (2026-09-05 — Unit 5 lab built; bank resync)
-
-- **Unit 5 (dialogue engine + flag store) IN PROGRESS — lab code built, all uncommitted.** New files: `src/dialogue.ts` (types `Flags`/`DialogueChoice`/`Dialogue` — text may be a flag-reading function; type guards `isDialogue`/`isDialogueLine`), `src/dialogues.ts` (sample data: choices, flag-conditional text, `onComplete` callbacks), `src/dialoguesystem.ts` (`DialogueSystem extends Phaser.Scene` — a parallel scene, realizing locked decision #6's separate-UI-scene note), `src/flags.ts` (pure store: `createFlags`/`setFlag`/`getFlag`/`hasFlag`/`resetFlags`). Modified: `gamescene.ts` (launches the scene; semi-transparent red 64×64 test trigger at (200,100) carrying dialogue via `setData`; `checkDialogueTrigger()` with enter-edge detection via `wasInsideTrigger`), `main.ts` (scene registered), `index.html` (two CSS comments trimmed only).
-- **Status ruled by the human (2026-09-05): U5 stays 🟨 in progress** — the lab code exists, but the lesson/review/challenge steps aren't done. `dist/` is still the 2026-09-04 build: nothing dialogue-related is committed or deployed.
-- **Unrecorded review session recovered:** `dialoguesystem.ts` carries numbered fix comments (#4–#8) — prompt text resolves on choice pages too; explicit container hit-areas so `pointerdown` fires; `onComplete` unified into `advance()`; consecutive choice pages can't stack. These fixes predate this bank sync.
-- **Review follow-ups surfaced (human to type, not yet done):** `Flags` is defined twice (`dialogue.ts` + `flags.ts` — one home needed; same lesson as Unit 3's `Point2`); dialogue input is **keyboard-only** (raw Z/X/arrows via `addKey`) — not routed through `InputSource`/`CompositeInput`, so touch and gamepad can't drive dialogue yet; `dialogues.ts` uses trailing commas in multiline objects, a loose fit with the "commas only where required" style ruling (human to rule).
-- **Ruling (2026-09-05): dual agent-rules files are deliberate.** `.clinerules` (header retitled "instructions") serves the Cline plugin; a full copy at `memory-bank/instructions.md` serves another agent.
-- **`memory-bank/projectMap.md` adopted:** repo tree snapshot excluding `.git/`, `node_modules/`, `dist/`; regenerated this date (the human's first save was already stale). Next session: the human writes a script to regenerate it automatically.
+- **U5 ruled complete by the human** (labs, break-its, commit & deploy all landed; the flag→dialogue challenge folds into M1's remaining work). Commits `7ddab37` + `8835961`, pushed; build green; deployed and **server-verified 15:24**.
+- **Lab A — one home for `Flags`:** the type deduped into `flags.ts`; `import type` everywhere; dead type guards trimmed. An earlier unrecorded review session's #4–#8 fixes (prompt visible on choice pages, explicit container hit-areas, `onComplete` unified into `advance()`, no stacking choice pages) are part of the shipped code.
+- **Lab B — the map in the type system:** `Action = "a" | "b" | "start" | "select"`; keyboard placeholder bindings Z/X/ENTER/ESC (rebindable controls assumed future); HTML `data-action="a"/"b"`; gamepad `buttonIndex` 0/1/8/9; `Record` exhaustiveness proven via break-its (missing row = compiler error; HTML typos = silence — hence runtime guards at the DOM boundary).
+- **Lab C — `Button` widening + one pipeline:** `Button = Action | Direction` (direction edges first-class); `KeyboardInput` = one `Record<Button, Key>` table (`createCursorKeys` retired); TouchInput unified to `buttons`/`just` records over `Button`; GamepadInput d-pad fixed (stick past deadzone wins, else d-pad — the d-pad previously did nothing); `axis()` + guards `isAction`/`isDirection` single-homed in `input.ts` (human's ruling); `DialogueSystem` lost all raw keys and gained input-agnostic `handleInput(input)`; `GameScene.update()` is the single input owner (dialogue showing → `handleInput`, else movement/trail/fox; one `endFrame()`; walk-while-talking fixed; duplicate `dialogueSystem` assignment deleted). Known cosmetic: the fox freezes mid-frame during dialogue (the anim gate lives in the else branch).
+- **Done-when met:** dialogue drivable by keyboard, phone, and gamepad — live at knkn.dunaway.io. M1's "one dialogue tree, all three input modes" requirement ticked.
+- **Bank compressed this session (retention rule applied):** pre-U4 history → one-liners in `progress.md`; `techContext.md` environment snapshot tightened to facts; canon mirrors (`design.md`, `syllabus.md`) untouched; decision log permanent.
