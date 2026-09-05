@@ -66,32 +66,33 @@ export class GameScene extends Phaser.Scene {
       new TouchInput(document.getElementById("controls")!),
       new GamepadInput(this)
     )
-
-    // Add dialogue system
-    this.dialogueSystem = this.scene.get("DialogueSystem") as DialogueSystem
   }
 
   override update(): void {
-    this.player.move(this.controls, WALK_SPEED)
+    if (this.dialogueSystem.isShowing) {
+      this.dialogueSystem.handleInput(this.controls)
+    } else {
+      this.player.move(this.controls, WALK_SPEED)
 
-    const here = { x: this.player.sprite.x, y: this.player.sprite.y }
-    const last = this.trail.last()
-    if (last === undefined || last.x !== here.x || last.y !== here.y) {
-      this.trail.push(here)
-    }
+      const here = { x: this.player.sprite.x, y: this.player.sprite.y }
+      const last = this.trail.last()
+      if (last === undefined || last.x !== here.x || last.y !== here.y) {
+        this.trail.push(here)
+      }
 
-    const target = this.trail.atPathDistance(FOLLOW_GAP)
-    this.fox.chase(target, WALK_SPEED)
+      const target = this.trail.atPathDistance(FOLLOW_GAP)
+      this.fox.chase(target, WALK_SPEED)
 
-    const vx = this.fox.sprite.body?.velocity.x ?? 0
-    const vy = this.fox.sprite.body?.velocity.y ?? 0
-    const moving = Math.abs(vx) + Math.abs(vy) > 5
+      const vx = this.fox.sprite.body?.velocity.x ?? 0
+      const vy = this.fox.sprite.body?.velocity.y ?? 0
+      const moving = Math.abs(vx) + Math.abs(vy) > 5
 
-    this.fox.sprite.play(moving ? "fox-walk" : "fox-idle", true)
-    if (vx < -0.5) {
-      this.fox.sprite.setFlipX(true)
-    } else if (vx > 0.5) {
-      this.fox.sprite.setFlipX(false)
+      this.fox.sprite.play(moving ? "fox-walk" : "fox-idle", true)
+      if (vx < -0.5) {
+        this.fox.sprite.setFlipX(true)
+      } else if (vx > 0.5) {
+        this.fox.sprite.setFlipX(false)
+      }
     }
 
     this.controls.endFrame()

@@ -1,5 +1,7 @@
 import Phaser from "phaser"
-import { Flags, Dialogue, DialogueChoice } from "./dialogue"
+import type { Flags } from "./flags"
+import type { Dialogue, DialogueChoice, } from "./dialogue"
+import type { InputSource } from "./input"
 
 export class DialogueSystem extends Phaser.Scene {
   private textSprite!: Phaser.GameObjects.Text
@@ -11,10 +13,6 @@ export class DialogueSystem extends Phaser.Scene {
   private currentIndex = 0
   private flags: Flags = {}
 
-  private aKey!: Phaser.Input.Keyboard.Key
-  private bKey!: Phaser.Input.Keyboard.Key
-  private upKey!: Phaser.Input.Keyboard.Key
-  private downKey!: Phaser.Input.Keyboard.Key
   isShowing = false
 
   constructor() {
@@ -31,12 +29,6 @@ export class DialogueSystem extends Phaser.Scene {
     })
     this.textSprite.setOrigin(0.5, 0.5)
     this.textSprite.setVisible(false)
-
-    // A = Z, B = X, arrows navigate choices
-    this.aKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.Z)
-    this.bKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.X)
-    this.upKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
-    this.downKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
   }
 
   showDialogue(dialogue: Dialogue[] | string[], flags: Flags): void {
@@ -131,8 +123,6 @@ export class DialogueSystem extends Phaser.Scene {
     this.advance()
   }
 
-  // #6: the one place a line gets left, so onComplete now fires for
-  // plain-text lines too, in the same order makeChoice used to
   private advance(): void {
     const line = this.currentDialogue[this.currentIndex]
     if (line && line.onComplete) {
@@ -158,30 +148,27 @@ export class DialogueSystem extends Phaser.Scene {
     this.currentIndex = 0
   }
 
-  override update(): void {
+  handleInput(input: InputSource): void {
     if (!this.isShowing) return
 
     if (this.choiceButtons.length > 0) {
-      // #5: choices are keyboard-navigable too — arrows move, Z confirms
-      if (Phaser.Input.Keyboard.JustDown(this.upKey)) {
-        this.selectChoice(
-          (this.selectedChoice - 1 + this.currentChoices.length) % this.currentChoices.length
-        )
+      if (input.justPressed("up")) {
+        this.selectChoice((this.selectedChoice - 1 + this.currentChoices.length) % this.currentChoices.length)
       }
-      if (Phaser.Input.Keyboard.JustDown(this.downKey)) {
+      if (input.justPressed("down")) {
         this.selectChoice((this.selectedChoice + 1) % this.currentChoices.length)
       }
-      if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
+      if (input.justPressed("a")) {
         const choice = this.currentChoices[this.selectedChoice]
         if (choice) {
           this.makeChoice(choice)
         }
       }
     } else {
-      if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
+      if (input.justPressed("a")) {
         this.nextLine()
       }
-      if (Phaser.Input.Keyboard.JustDown(this.bKey)) {
+      if (input.justPressed("b")) {
         this.endDialogue()
       }
     }

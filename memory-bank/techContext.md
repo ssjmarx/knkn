@@ -15,6 +15,7 @@
 - Virtual resolution **240×240 (1:1)**, **16px** tiles — one config constant is its single home. *(Human ruling 2026-09-04, superseding 240×320/3:4: the square screen leaves portrait room for the pseudo-GBC shell art/buttons, and landscape side bars for an alternate touch layout.)*
 - Crisp pixel-art rendering; integer scaling preferred (240×3 = 720); GBC shell is DOM/CSS around the canvas, not game code
 - Phone-perfect by the vertical slice (Milestone 3): iOS Safari quirks, memory, texture atlases are Unit 21 topics
+- **Control map (ruled immutable 2026-09-05, `design.md` §18):** eight inputs only — D-pad, A, B, Start, Select (Start/Select reserved for the pause menu). Placeholder bindings pending future rebindable controls: keyboard arrows = D-pad, Z = A, X = B, ENTER = Start, ESC = Select; gamepad `buttons[0]` = A, `[1]` = B, `[8]` = Select, `[9]` = Start; HTML Start/Select buttons added when relevant. Encoded as `Action = "a" | "b" | "start" | "select"` in `src/input.ts`
 
 ## Tooling plans by semester (from the syllabus)
 

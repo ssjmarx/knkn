@@ -1,6 +1,7 @@
 // src/dialogues.ts
 
-import { Flags, Dialogue, DialogueChoice } from "./dialogue"
+import type { Flags } from "./flags"
+import type { Dialogue } from "./dialogue"
 
 // Simple dialogue (just text)
 export const npc_greeting: Dialogue[] = [

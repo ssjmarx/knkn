@@ -78,6 +78,7 @@
 | 2026-09-05 | U5 status ruled: **in progress** — lab code built, but lesson/review/challenge steps not yet done; nothing committed or deployed | user ruling |
 | 2026-09-05 | Dual agent-rules files, deliberate: `.clinerules` (header retitled "instructions") = the Cline plugin's copy; full copy at `memory-bank/instructions.md` = another agent's copy | user ruling |
 | 2026-09-05 | `memory-bank/projectMap.md` adopted — repo tree snapshot excluding `.git/`, `node_modules/`, `dist/`; regenerated this date; a script to auto-regenerate it is planned next session | user action |
+| 2026-09-05 | **Control map ruled immutable (post-lock, `design.md` §18):** eight inputs only — D-pad, A, B, Start, Select; A = confirm/advance, B = cancel/back; Start/Select reserved for the pause menu. Bindings are placeholders for future rebindable controls (keyboard: arrows, Z/X = A/B, ENTER/ESC = Start/Select; gamepad: buttons 0/1/8/9; HTML Start/Select buttons when relevant). Encoded in the type system immediately: `Action = "a" \| "b" \| "start" \| "select"` | user ruling |
 
 - **2026-09-04** — **Unit 3 cleanups (uncommitted at entry time; since folded into the U4 pre-start):** review cleanups applied (Point2 type-only import, dead-code trim, named `SPRITE_Y_OFFSET`); fox body-size fix ruled moot (no collider); commit & deploy of the trailing changes was the remaining step
 

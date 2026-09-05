@@ -1,4 +1,4 @@
-import type { Action, InputSource } from "./input"
+import type { Button, InputSource } from "./input"
 
 export class CompositeInput implements InputSource {
   private readonly sources: readonly InputSource[]
@@ -23,11 +23,11 @@ export class CompositeInput implements InputSource {
     return best
   }
 
-  isDown(action: Action): boolean {
+  isDown(action: Button): boolean {
     return this.sources.some((source) => source.isDown(action))
   }
 
-  justPressed(action: Action): boolean {
+  justPressed(action: Button): boolean {
     return this.sources.some((source) => source.justPressed(action))
   }
 

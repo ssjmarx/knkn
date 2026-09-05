@@ -1,9 +1,8 @@
-import type { Action, Direction, InputSource } from "./input"
+import { Action, Direction, InputSource, Button, axis, isAction, isDirection } from "./input"
 
 export class TouchInput implements InputSource {
-  private dirs: Record<Direction, boolean> = { down: false, left: false, right: false, up: false }
-  private actions: Record<Action, boolean> = { confirm: false, cancel: false }
-  private just: Record<Action, boolean> = { confirm: false, cancel: false }
+  private buttons: Record<Button, boolean> = { down: false, left: false, right: false, up: false, a: false, b: false, start: false, select: false }
+  private just: Record<Button, boolean> = { down: false, left: false, right: false, up: false, a: false, b: false, start: false, select: false }
   // pointerId → button under that finger, or null if it's over a dead zone
   private held = new Map<number, HTMLButtonElement | null>()
 
@@ -41,32 +40,29 @@ export class TouchInput implements InputSource {
     button.classList.toggle("pressed", down)
     const dir = button.dataset["dir"]
     const act = button.dataset["action"]
-    if (dir === "down" || dir === "left" || dir === "right" || dir === "up") {
-      this.dirs[dir] = down
-    } else if (act === "confirm" || act === "cancel") {
-      this.actions[act] = down
+    if (isDirection(dir)) {
+      this.buttons[dir] = down
+      if (down) {
+        this.just[dir] = true
+      }
+    } else if (isAction(act)) {
+      this.buttons[act] = down
       if (down) {
         this.just[act] = true
       }
     }
   }
 
-  get x(): number { return axis(this.dirs.left, this.dirs.right) }
-  get y(): number { return axis(this.dirs.up, this.dirs.down) }
+  get x(): number { return axis(this.buttons.left, this.buttons.right) }
+  get y(): number { return axis(this.buttons.up, this.buttons.down) }
 
-  isDown(action: Action): boolean { return this.actions[action] }
+  isDown(button: Button): boolean { return this.buttons[button] }
 
-  justPressed(action: Action): boolean { return this.just[action] }
+  justPressed(button: Button): boolean { return this.just[button] }
 
   endFrame(): void {
-    this.just.confirm = false
-    this.just.cancel = false
+    for (const action of Object.keys(this.just) as Action[]) {
+      this.just[action] = false
+    }
   }
-}
-
-function axis(negative: boolean, positive: boolean): number {
-  if (negative && positive) return 0
-  if (negative) return -1
-  if (positive) return 1
-  return 0
 }
