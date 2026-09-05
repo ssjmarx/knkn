@@ -32,7 +32,8 @@ Tiled **1.11.90 (installed 2026-09-04)** for tilemaps (Unit 2) · spreadsheet→
 - VS Code is the IDE
 - **Project tooling pinned (2026-09-03):** `phaser` 4.2.1 / `typescript` 7.0.2 / `vite` 8.2.2 — exact pins (upgrades are deliberate acts); `npm install` clean, 19 packages, 0 vulnerabilities
 - **Code style (user ruling 2026-09-03):** semicolon-free (relying on ASI), commas only where required; filenames lowercase everywhere; no linter/formatter yet — a Prettier elective can enforce the style mechanically later
-- **Elthen fox sheet map (measured):** 448×224 = 14 columns × 7 rows of 32×32 frames; walk = row 2 (frames 28–35), idle = row 0 (frames 0–4); fox body inside the frame = 20×15 at +6,+17 (also the arcade collision body)
+- **Elthen fox sheet map (measured):** `fox_sprite_sheet_elthens.png` — 448×224 = 14 columns × 7 rows of 32×32 frames; walk = row 2 (frames 28–35), idle = row 0 (frames 0–4); fox body inside the frame = 20×15 at +6,+17 (also the arcade collision body)
+- **Super Retro World character sheet map:** `free_character_1-3_super_retro_world.png` — 144×80 = 9 columns × 4 rows of 16×20 frames (3 characters × 4 directions × 3 walk frames); character 1 = columns 0–2; frame index = row × 9 + column; rows 0–3 = down/left/right/up; stand pose = middle column. Source sheet required whitespace removal before use. License filed (3rd entry)
 - Desk monitor is a **CRT** — adaptive FIT + autoRound scaling chosen accordingly; CRTs are forgiving for pixel-art scaling
 
 ## Phaser engine notes (learned from shipped source/types — the standing rule paying off)
@@ -42,6 +43,7 @@ Tiled **1.11.90 (installed 2026-09-04)** for tilemaps (Unit 2) · spreadsheet→
 - **Display order:** equal `depth` (default 0) renders by insertion order; higher depth renders on top. `branches.setDepth(1)` is the above-player canopy layer — the general "walks behind" recipe for signs, railings, house fronts.
 - **Camera:** `startFollow(target, roundPixels, lerpX, lerpY)`. Lerp 1 = hard-locked — **ruled the accurate GBC feel (2026-09-04)**. Low lerp exposes sub-pixel rounding jitter (two independently rounded floats: `world − scroll`); real GB hardware scrolled whole pixels only, making the artifact impossible on-target — a standing argument for grid-locked movement.
 - **`Phaser.Scale.FIT` + `autoRound`** is the adaptive scaling mode (replaces fixed zoom; CRT-friendly).
+- **Follower:** `Trail` (dedup push + `atPathDistance` arc-length interpolation) is pure logic — zero Phaser; `Fox` is an arcade body steering toward the arc-length target (`chase`: `min(speed, dist·GAIN)` P-controller, `STOP_RADIUS` 1px, velocity-threshold anim state). No fox↔wall collider — ruled acceptable (the fox threads the player's wake; slight corner clipping on sharp bends).
 
 ## Infrastructure decisions (resolved 2026-09-03)
 

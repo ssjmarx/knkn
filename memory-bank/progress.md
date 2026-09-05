@@ -6,14 +6,14 @@
 
 | # | Milestone | Semester gate | Done when | Status |
 |---|---|---|---|---|
-| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U2 done) |
+| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U3 done) |
 | 2 | **The boss fight** | S2 final | Scripted boss: base form + two stones, Wane visible on screen, transformation live, win/lose screens | ⬜ not started |
 | 3 | **The vertical slice** | S3 | One town, one stone quest, one scaling guardian, phone-perfect, deployed | ⬜ not started |
 | 4 | **The demo** | S4 | Next Fest-ready public demo → content grind to v1.0 | ⬜ not started |
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — 🟨 in progress (follower live & smooth, cleanups done; commit/deploy pending) · U4 input abstraction (keyboard/touch/gamepad) · U5 dialogue engine + flag store — *not started*
+- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — **✅ DONE 2026-09-04** (follower live & smooth; trailing cleanups pending commit & deploy) · U4 input abstraction (keyboard/touch/gamepad) — *in progress (pre-started: `src/input.ts`)* · U5 dialogue engine + flag store — *not started*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -37,6 +37,9 @@
 - **2026-09-04** — **UNIT 2 COMPLETE:** Kon Kon walks a real map at knkn.dunaway.io — 30×30 tile world (`test_area.json`, tileset `town` embedded), tile-property collision (57 `collides` props), hard-locked camera (lerp 1 — ruled the accurate GBC feel), canopy overlay (`branches.setDepth(1)`), boot-time tile-size validation via the `Tilemap` object; commits `77a243f` + `2c5e779`, pushed and deployed
 - **2026-09-04** — **Three-bug postmortem (Unit 2):** (1) Tiled export carried an external `.tsx` reference — embed tilesets before export; (2) `addTilesetImage` wants the tileset's *name field*, not its filename; (3) Phaser's typed caches: `tilemapTiledJSON` stores `{format, data}` in `cache.tilemap`, not `cache.json` — a lesson-code bug planted by the agent, caught by the human's boot-time validation guard. All three resolved by reading shipped source in `node_modules/phaser/src`, not by guessing. Workflow lesson: debug on `npm run dev`, deploy to verify.
 - **2026-09-04** — Aspect ruled **240×240 (1:1)** (supersedes 240×320); camera feel ruled **locked, lerp 1**; Grumpy Function placeholder tilesets (8×8 scaled 2×) licensed in `licenses/` — convention upheld, 2 entries
+- **2026-09-04** — **UNIT 3 COMPLETE:** the follower — `src/trail.ts` (pure breadcrumb path: dedup push, `atPathDistance` arc-length interpolation), `src/player.ts` (Player class: `InputSource`-driven movement, 4-direction anims, diagonal normalization via `Math.SQRT1_2`), `src/fox.ts` (Fox class: arcade-physics steering — `chase` P-controller `min(speed, dist·GAIN)`, velocity-based anim state); `makeWalk` closure lesson; Super Retro World character sheet licensed (3rd entry); commits `e8c92e7` → `4b7e58a`, pushed
+- **2026-09-04** — **The follower algorithm, as iterated by the human:** frame-delay replay → euclidean gap (warped on path folds) → **arc-length targeting** (measure along the path, interpolate the remainder — the human's design) → **steering follower** (Fox as arcade body chasing the arc-length target — final form, ruled smooth). Meta-lesson: write the screen-position algebra before applying pixel-art folklore (a `Math.round`-anchoring attempt manufactured jitter by breaking the camera's exact player-position cancellation)
+- **2026-09-04** — **U4 pre-started by the human:** `src/input.ts` — `InputSource` interface (`x/y` axis readouts) + `KeyboardInput implements InputSource`, consumed polymorphically by `Player.move`
 
 ## Decision log
 
@@ -67,9 +70,12 @@
 | 2026-09-04 | **Follower jitter resolved (Unit 3):** direct trail-point placement jittered during camera movement (rounding-phase mismatch between fox float position and roundPixels camera scroll); rounding the fox target made it worse (confirmed the theory); final design — fox is an Arcade physics sprite (`src/fox.ts`) with proportional steering toward the interpolated trail point, sharing the player's physics step. All agent-review cleanups applied (Point2 import, dead-code trim, named SPRITE_Y_OFFSET) | user design + joint diagnosis |
 | 2026-09-04 | **Fox collision removed (Unit 3 ruling, supersedes same-day collider addition):** the follower is a visual echo of the player's legal path — player collision already validates the trail, corner clipping is unnoticeable, and a wall collider made the fox stick on geometry (bug factory). No wall collider, no world-bounds clamp on the fox; body-size fix moot | user ruling |
 | 2026-09-04 | Placeholder terrain: Grumpy Function interior + exterior tilesets (8×8 DMG-style, scaled 2× to `TILE_SIZE` 16; "clashy" placeholder look accepted — bespoke art later); license filed in `licenses/` | user action |
+| 2026-09-04 | Follower architecture: **Fox as an arcade-physics steering follower** (`chase` P-controller toward the arc-length trail target) — replaces position-replay; collision ruling recorded separately above | user ruling |
+| 2026-09-04 | Placeholder character: Super Retro World free characters pack (16×20 frames, 9×4 grid, character 1; whitespace removed from source sheet); license filed — 3rd `licenses/` entry | user action |
+| 2026-09-04 | U4 pre-started: `InputSource` interface + `KeyboardInput` built independently by the human; the formal U4 lesson formalizes it (literal unions, narrowing, enums, more sources) | user action |
 
-- **2026-09-04** — **Unit 3 follower live (uncommitted):** `Trail` history + path-distance interpolation, physics-driven `Fox` with proportional steering; follower-jitter diagnosed (rounding-phase mismatch) and resolved by making the fox a physics actor; review cleanups applied; remaining: fox body size/offset per Elthen sheet map, then commit & deploy
+- **2026-09-04** — **Unit 3 cleanups (uncommitted at entry time; since folded into the U4 pre-start):** review cleanups applied (Point2 type-only import, dead-code trim, named `SPRITE_Y_OFFSET`); fox body-size fix ruled moot (no collider); commit & deploy of the trailing changes was the remaining step
 
 ## Not started
 
-Everything else: units U3–U23 (U3 is next), milestones 1–4 (M1 in progress — U3–U5 remain), CI.
+Everything else: units U4–U23 (U4 in progress — pre-started), milestones 1–4 (M1 in progress — U4–U5 remain), CI.

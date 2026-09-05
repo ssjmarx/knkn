@@ -4,5 +4,5 @@ export const GAME_WIDTH = 240
 export const GAME_HEIGHT = 240
 export const TILE_SIZE = 16
 export const WALK_SPEED = 80
-export const FOLLOW_DELAY = 24
+export const TRAIL_SIZE = 24
 export const FOLLOW_GAP = 16

@@ -1,5 +1,5 @@
 import Phaser from "phaser"
-import { TILE_SIZE, WALK_SPEED, FOLLOW_DELAY, FOLLOW_GAP } from "../config"
+import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP } from "../config"
 import { Trail } from "../trail"
 import { Player } from "../player"
 import { Fox } from "../fox"
@@ -31,7 +31,7 @@ export class GameScene extends Phaser.Scene {
     const startX = map.widthInPixels / 2
     const startY = map.heightInPixels / 2
 
-    this.trail = new Trail(FOLLOW_DELAY + 6)
+    this.trail = new Trail(TRAIL_SIZE + 6)
     this.fox = new Fox(this, startX, startY)
     this.player = new Player(this, startX, startY)
     this.physics.add.collider(this.player.sprite, walls)

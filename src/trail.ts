@@ -19,12 +19,12 @@ export class Trail {
   }
 
   last(): Point2 | undefined {
-  return this.history[this.history.length - 1]
-    }
+    return this.history[this.history.length - 1]
+  }
   
   atPathDistance(minDistance: number): Point2 | undefined {
-  let remaining = minDistance
-  for (let i = this.history.length - 1; i > 0; i--) {
+    let remaining = minDistance
+    for (let i = this.history.length - 1; i > 0; i--) {
       const here = this.history[i]!
       const prev = this.history[i - 1]!
       const segment = Math.hypot(here.x - prev.x, here.y - prev.y)
@@ -33,10 +33,10 @@ export class Trail {
       return {
           x: here.x + (prev.x - here.x) * t,
           y: here.y + (prev.y - here.y) * t
-      }
+        }
       }
       remaining -= segment
-  }
-  return this.history[0]
+    }
+    return this.history[0]
   }
 }

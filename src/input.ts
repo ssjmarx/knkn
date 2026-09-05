@@ -1,9 +1,9 @@
+import type Phaser from "phaser"
+
 export interface InputSource {
   readonly x: number
   readonly y: number
 }
-
-import type Phaser from "phaser"
 
 export class KeyboardInput implements InputSource {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys
