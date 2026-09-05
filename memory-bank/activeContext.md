@@ -48,3 +48,14 @@ Infrastructure (added 2026-09-03):
 ## Session protocol
 
 At the end of every session: update this file and `progress.md` (dated, factual). Record rulings in the canon mirrors (`design.md`, `syllabus.md`) only when the human issues them. Full rules: `.clinerules`.
+
+## Session update (2026-09-04, continued — Unit 3 follower live, review cleanups done)
+
+- **Unit 3 in progress: the follower is live and smooth.** Kon Kon trails the player via a position-history `Trail` (`src/trail.ts`, `atPathDistance(FOLLOW_GAP)` path interpolation) and a new physics-driven `Fox` class (`src/fox.ts`, proportional steering: `step = min(speed, dist * GAIN)`, GAIN 16, STOP_RADIUS 1). Player gained diagonal normalization (`Math.SQRT1_2`). New PC sprite: Super Retro World free character (license filed in `licenses/`).
+- **Follower jitter — diagnosed and resolved (2026-09-04):**
+  - Original design placed the fox directly at an interpolated trail point in `update()` — sub-pixel jitter whenever the camera moved. Diagnosis: **rounding-phase mismatch** — the fox's float position and the camera's `roundPixels` scroll rounded at different sub-pixel phases; the player was immune because the camera centers on it (both roundings derive from the same number).
+  - First attempted fix (rounding the fox's target to whole pixels) made the jitter dramatically *worse* — it locked the fox's rounding phase against the camera's, confirming the mismatch theory by failing in the predicted direction.
+  - Resolution (human's design): fox became an Arcade physics sprite sharing the player's physics step and frame delta — one rounding left in the pipeline; smooth at lerp 1.
+- **Agent review cleanups all done (2026-09-04, human-typed):** fox wall collider + `setCollideWorldBounds` added; `Point2` now imported from `trail.ts` (duplicate removed); dead code trimmed (`stillFrames`, `Trail.at()`, `Trail.atDistance()`); the sprite-anchor y-offset named `SPRITE_Y_OFFSET` in `fox.ts`.
+- **Open follow-up (small, before commit):** the Fox body still uses the default full-frame Arcade body — per the measured Elthen sheet map (techContext), the fox body should be `setSize(20, 15)` + `setOffset(6, 17)` so wall collision matches the visible fox, not the 32×32 frame.
+- **Git state at session note:** Unit 3 work is **uncommitted** (modified: `config.ts`, `bootscene.ts`, `gamescene.ts`; new: `fox.ts`, `player.ts`, `trail.ts`, PC asset + license). Commit & deploy step of Unit 3 pending.

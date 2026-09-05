@@ -1,8 +1,13 @@
 import Phaser from "phaser"
-import { GAME_WIDTH, GAME_HEIGHT, WALK_SPEED, TILE_SIZE } from "../config"
+import { TILE_SIZE, WALK_SPEED, FOLLOW_DELAY, FOLLOW_GAP } from "../config"
+import { Trail } from "../trail"
+import { Player } from "../player"
+import { Fox } from "../fox"
 
 export class GameScene extends Phaser.Scene {
-  private fox!: Phaser.Physics.Arcade.Sprite
+  private player!: Player
+  private fox!: Fox
+  private trail!: Trail
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
 
   constructor() {
@@ -14,51 +19,52 @@ export class GameScene extends Phaser.Scene {
     if (map.tileWidth !== TILE_SIZE || map.tileHeight !== TILE_SIZE) {
       throw new Error(`map tiles are ${map.tileWidth}px but TILE_SIZE is ${TILE_SIZE} — the map and the code disagree`)
     }
+
     const tileset = map.addTilesetImage("town", "tiles")!
-    const ground = map.createLayer("ground", tileset)
+    map.createLayer("ground", tileset)
     const walls = map.createLayer("walls", tileset)
     const branches = map.createLayer("branches", tileset)
     walls.setCollisionByProperty({ collides: true })
     branches.setDepth(1)
 
-    this.fox = this.physics.add.sprite(map.widthInPixels / 2, map.heightInPixels / 2, "fox")
-    this.fox.body!.setSize(20, 15)
-    this.fox.body!.setOffset(6, 17)
-    this.fox.setCollideWorldBounds(true)
+    const startX = map.widthInPixels / 2
+    const startY = map.heightInPixels / 2
+
+    this.trail = new Trail(FOLLOW_DELAY + 6)
+    this.fox = new Fox(this, startX, startY)
+    this.player = new Player(this, startX, startY)
+    this.physics.add.collider(this.player.sprite, walls)
+
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
-    this.physics.add.collider(this.fox, walls)
+    this.player.sprite.setCollideWorldBounds(true)
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
-    this.cameras.main.startFollow(this.fox, true)
+    this.cameras.main.startFollow(this.player.sprite, true)
 
     this.cursors = this.input.keyboard!.createCursorKeys()
-    this.fox.play("fox-idle")
   }
 
-  override update(): void {
-    const vx = axisVelocity(this.cursors.left.isDown, this.cursors.right.isDown)
-    const vy = axisVelocity(this.cursors.up.isDown, this.cursors.down.isDown)
+override update(): void {
+    this.player.move(this.cursors, WALK_SPEED)
 
-    this.fox.setVelocityX(vx * WALK_SPEED)
-    this.fox.setVelocityY(vy * WALK_SPEED)
-
-    if (vx !== 0 || vy !== 0) {
-        this.fox.play("fox-walk", true)
-    } else {
-        this.fox.play("fox-idle", true)
+    const here = { x: this.player.sprite.x, y: this.player.sprite.y }
+    const last = this.trail.last()
+    if (last === undefined || last.x !== here.x || last.y !== here.y) {
+      this.trail.push(here)
     }
+    
+    const target = this.trail.atPathDistance(FOLLOW_GAP)
+    this.fox.chase(target, WALK_SPEED)
 
-    if (vx < 0) {
-        this.fox.setFlipX(true)
-    } else if (vx > 0) {
-        this.fox.setFlipX(false)
+    const vx = this.fox.sprite.body?.velocity.x ?? 0
+    const vy = this.fox.sprite.body?.velocity.y ?? 0
+    const moving = Math.abs(vx) + Math.abs(vy) > 5
+
+    this.fox.sprite.play(moving ? "fox-walk" : "fox-idle", true)
+    if (vx < -0.5) {
+      this.fox.sprite.setFlipX(true)
+    } else if (vx > 0.5) {
+      this.fox.sprite.setFlipX(false)
     }
   }
-}
-
-function axisVelocity(negative: boolean, positive: boolean): number {
-  if (negative && positive) return 0
-  if (negative) return -1
-  if (positive) return 1
-  return 0
 }
