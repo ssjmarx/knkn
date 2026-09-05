@@ -11,9 +11,6 @@ export class Fox {
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.sprite = scene.physics.add.sprite(x, y, "fox")
     this.sprite.play("fox-idle")
-
-    this.sprite.body?.setSize(8, 8)
-    this.sprite.body?.setOffset(0, 24)
   }
 
   chase(target: Point2 | undefined, speed: number): void {
