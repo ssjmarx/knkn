@@ -15,14 +15,15 @@
 - **UNIT 0 COMPLETE (2026-09-03):** first gated build, first deploy — "Hello Kon Kon" live at `knkn.dunaway.io` on the human's own infra (nginx/Portainer + Cloudflare tunnel).
 - **UNIT 1 COMPLETE (2026-09-03):** the fox walks — scenes split into `src/scenes/`, Elthen sheet anims (walk row 2, idle row 0), cursor-velocity movement, world-bounds collision, FIT scaling, facing flip; commits `6c58da1` → `6477d00`, pushed.
 - **UNIT 2 COMPLETE (2026-09-04):** a real place — 30×30 Tiled map (`test_area.json`, embedded `town` tileset from Grumpy Function 8×8×2 placeholder art), tile-property collision, hard-locked camera (lerp 1, ruled), canopy layer (`branches.setDepth(1)`), boot-time tile-size validation via the `Tilemap` object. Virtual resolution now **240×240 (1:1)** per human ruling. Commits `77a243f` + `2c5e779`, pushed and deployed.
-- **UNIT 3 COMPLETE (2026-09-04):** the follower — `Trail` (pure breadcrumb path, dedup push, arc-length interpolation), `Player` (InputSource-driven, 4-direction anims, diagonal normalization), `Fox` (arcade-physics steering follower — `chase` P-controller; no wall collider, ruled acceptable). Algorithm arc: frame-delay → euclidean gap → arc-length → steering (each step user-driven). Commits `e8c92e7` → `4b7e58a`, pushed. **U4 pre-started**: `src/input.ts` (`InputSource` + `KeyboardInput`, consumed by `Player.move`). CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+- **UNIT 3 COMPLETE (2026-09-04):** the follower — `Trail` (pure breadcrumb path, dedup push, arc-length interpolation), `Player` (InputSource-driven, 4-direction anims, diagonal normalization), `Fox` (arcade-physics steering follower — `chase` P-controller; no wall collider, ruled acceptable). Algorithm arc: frame-delay → euclidean gap → arc-length → steering (each step user-driven). Commits `e8c92e7` → `4b7e58a`, pushed.
+- **UNIT 4 COMPLETE (2026-09-04):** one game, three hands — `InputSource` (axes + `isDown`/`justPressed`/`endFrame`); `KeyboardInput` (JustDown edges), `TouchInput` (DOM shell buttons, elementFromPoint slide-retargeting, `Map<pointerId, button|null>` multi-touch, pressed feedback), `GamepadInput` (manual deadzone, rising-edge justPressed), `CompositeInput` composition root; landscape overlay + `100dvh`. **Done-when confirmed: keyboard, phone (portrait + landscape), gamepad — all live at knkn.dunaway.io.** Commits `62a5b51` → `6030197`, pushed and deployed. CI not yet built. The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
 ## What's next (the human's solo work)
 
-1. **Unit 4 — input abstraction:** keyboard/touch/gamepad behind one interface, so `Player.move()` stops reaching into Phaser cursor objects directly (Milestone 1 requires all three input modes). TS payload: interfaces, implementations, the "program to an interface" lesson.
-2. **Unit 3 finish line:** commit & deploy the follower (work currently uncommitted).
-3. Later in M1: day/night tint (U2-adjacent), U5 dialogue engine + flag store; CI when convenient: typecheck + build + deploy on push (Gitea Actions).
-4. Optional: `docker rm pihole` (the dead container). ~~`src/types.ts`~~ — deleted 2026-09-04 (Point2 lives in `trail.ts`).
+1. **Unit 5 — dialogue engine + flag store (the LAST unit before Milestone 1):** data-driven JSON dialogue; TS payload: generics, `Record`, `keyof`, first discriminated unions. An NPC says different things based on flags — and the `justPressed` edges built in U4 finally get their consumer.
+2. **Milestone 1 finish line:** day/night tint (the last M1 requirement after U5) — then **The Walk ships**: one map, follower, tint, dialogue tree, three input modes, deployed.
+3. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
+4. Optional tidy: `docker rm pihole` (the dead container).
 
 ## Open decisions (✎ — the human's, never the agent's)
 

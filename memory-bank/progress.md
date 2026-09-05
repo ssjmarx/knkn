@@ -6,14 +6,14 @@
 
 | # | Milestone | Semester gate | Done when | Status |
 |---|---|---|---|---|
-| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U3 done) |
+| 1 | **The Walk** | S1 midterm | One map, the follower, day/night tint, one dialogue tree, all three input modes, deployed | 🟨 in progress (U0–U4 done) |
 | 2 | **The boss fight** | S2 final | Scripted boss: base form + two stones, Wane visible on screen, transformation live, win/lose screens | ⬜ not started |
 | 3 | **The vertical slice** | S3 | One town, one stone quest, one scaling guardian, phone-perfect, deployed | ⬜ not started |
 | 4 | **The demo** | S4 | Next Fest-ready public demo → content grind to v1.0 | ⬜ not started |
 
 ## Unit tracker
 
-- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — **✅ DONE 2026-09-04** (follower live & smooth; trailing cleanups pending commit & deploy) · U4 input abstraction (keyboard/touch/gamepad) — *in progress (pre-started: `src/input.ts`)* · U5 dialogue engine + flag store — *not started*
+- **S1 Foundations "The Walk":** U0 — **✅ DONE 2026-09-03** · U1 — **✅ DONE 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ DONE 2026-09-04** (real map live: walls collide, locked camera, canopy layer) · U3 the follower — **✅ DONE 2026-09-04** (cleanups committed in `62a5b51`) · U4 input abstraction — **✅ DONE 2026-09-04** (keyboard + touch + gamepad all confirmed live) · U5 dialogue engine + flag store — *next*
 - **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
 - **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
@@ -40,6 +40,7 @@
 - **2026-09-04** — **UNIT 3 COMPLETE:** the follower — `src/trail.ts` (pure breadcrumb path: dedup push, `atPathDistance` arc-length interpolation), `src/player.ts` (Player class: `InputSource`-driven movement, 4-direction anims, diagonal normalization via `Math.SQRT1_2`), `src/fox.ts` (Fox class: arcade-physics steering — `chase` P-controller `min(speed, dist·GAIN)`, velocity-based anim state); `makeWalk` closure lesson; Super Retro World character sheet licensed (3rd entry); commits `e8c92e7` → `4b7e58a`, pushed
 - **2026-09-04** — **The follower algorithm, as iterated by the human:** frame-delay replay → euclidean gap (warped on path folds) → **arc-length targeting** (measure along the path, interpolate the remainder — the human's design) → **steering follower** (Fox as arcade body chasing the arc-length target — final form, ruled smooth). Meta-lesson: write the screen-position algebra before applying pixel-art folklore (a `Math.round`-anchoring attempt manufactured jitter by breaking the camera's exact player-position cancellation)
 - **2026-09-04** — **U4 pre-started by the human:** `src/input.ts` — `InputSource` interface (`x/y` axis readouts) + `KeyboardInput implements InputSource`, consumed polymorphically by `Player.move`
+- **2026-09-04** — **UNIT 4 COMPLETE:** one game, three hands — `InputSource` interface (axes + `isDown`/`justPressed`/`endFrame`); `KeyboardInput` (cursors + ENTER/ESC, `JustDown` edges); `TouchInput` (DOM shell buttons, `elementFromPoint` slide-retargeting, `Map<pointerId, button|null>` multi-touch with null-as-dead-zone-state, pressed-class feedback); `GamepadInput` (manual 0.15 deadzone — `setAxisThreshold` is per-pad, not per-plugin; rising-edge `justPressed` via `wasDown`); `CompositeInput` as the scene's composition root; landscape fixed-overlay + `100dvh`. **Done-when confirmed by the human: keyboard, phone (portrait + landscape), and gamepad all walk the fox, live at knkn.dunaway.io.** Commits `62a5b51` → `6030197`, pushed and deployed
 
 ## Decision log
 
@@ -78,4 +79,4 @@
 
 ## Not started
 
-Everything else: units U4–U23 (U4 in progress — pre-started), milestones 1–4 (M1 in progress — U4–U5 remain), CI.
+Everything else: units U5–U23 (U5 is next), milestones 1–4 (M1 in progress — U5 + day/night tint remain), CI.
