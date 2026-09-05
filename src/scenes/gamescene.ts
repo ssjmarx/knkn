@@ -3,12 +3,13 @@ import { TILE_SIZE, WALK_SPEED, FOLLOW_DELAY, FOLLOW_GAP } from "../config"
 import { Trail } from "../trail"
 import { Player } from "../player"
 import { Fox } from "../fox"
+import { KeyboardInput } from "../input"
 
 export class GameScene extends Phaser.Scene {
   private player!: Player
   private fox!: Fox
   private trail!: Trail
-  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  private controls!: KeyboardInput
 
   constructor() {
     super("Game")
@@ -41,11 +42,11 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.cameras.main.startFollow(this.player.sprite, true)
 
-    this.cursors = this.input.keyboard!.createCursorKeys()
+    this.controls = new KeyboardInput(this)
   }
 
 override update(): void {
-    this.player.move(this.cursors, WALK_SPEED)
+    this.player.move(this.controls, WALK_SPEED)
 
     const here = { x: this.player.sprite.x, y: this.player.sprite.y }
     const last = this.trail.last()

@@ -18,9 +18,10 @@
 
 ## What's next (the human's solo work — rest of Unit 0)
 
-1. **Unit 3 — the follower:** Kon Kon trails the player with GBC-style step-and-delay — the fox stops being the player and becomes the partner, per canon. Prerequisite: a *player-character* sprite (human child placeholder, 16×16-ish; license filed if third-party). TS payload: classes, `this`, modules, imports/exports.
-2. CI when convenient: typecheck + build + deploy on push (Gitea Actions is the natural candidate).
-3. Optional: `docker rm pihole` (the dead container); decide the fate of `src/types.ts`.
+1. **Unit 4 — input abstraction:** keyboard/touch/gamepad behind one interface, so `Player.move()` stops reaching into Phaser cursor objects directly (Milestone 1 requires all three input modes). TS payload: interfaces, implementations, the "program to an interface" lesson.
+2. **Unit 3 finish line:** commit & deploy the follower (work currently uncommitted).
+3. Later in M1: day/night tint (U2-adjacent), U5 dialogue engine + flag store; CI when convenient: typecheck + build + deploy on push (Gitea Actions).
+4. Optional: `docker rm pihole` (the dead container); decide the fate of `src/types.ts`.
 
 ## Open decisions (✎ — the human's, never the agent's)
 
@@ -56,6 +57,6 @@ At the end of every session: update this file and `progress.md` (dated, factual)
   - Original design placed the fox directly at an interpolated trail point in `update()` — sub-pixel jitter whenever the camera moved. Diagnosis: **rounding-phase mismatch** — the fox's float position and the camera's `roundPixels` scroll rounded at different sub-pixel phases; the player was immune because the camera centers on it (both roundings derive from the same number).
   - First attempted fix (rounding the fox's target to whole pixels) made the jitter dramatically *worse* — it locked the fox's rounding phase against the camera's, confirming the mismatch theory by failing in the predicted direction.
   - Resolution (human's design): fox became an Arcade physics sprite sharing the player's physics step and frame delta — one rounding left in the pipeline; smooth at lerp 1.
-- **Agent review cleanups all done (2026-09-04, human-typed):** fox wall collider + `setCollideWorldBounds` added; `Point2` now imported from `trail.ts` (duplicate removed); dead code trimmed (`stillFrames`, `Trail.at()`, `Trail.atDistance()`); the sprite-anchor y-offset named `SPRITE_Y_OFFSET` in `fox.ts`.
-- **Open follow-up (small, before commit):** the Fox body still uses the default full-frame Arcade body — per the measured Elthen sheet map (techContext), the fox body should be `setSize(20, 15)` + `setOffset(6, 17)` so wall collision matches the visible fox, not the 32×32 frame.
+- **Ruling (2026-09-04): fox collision removed.** An earlier pass added a fox wall collider + `setCollideWorldBounds`; on further review the human removed both. Rationale: the fox follows positions the player's own collision already validated, so corner clipping is unnoticeable, while a collider made the follower a bug factory (stuck against geometry no matter the hitbox size/offset — the trail point can sit across a wall corner). The follower is a *visual echo of the player's legal path*, not a constrained body. Consequence accepted: with no world-bounds clamp, the fox can trail up to FOLLOW_GAP (16px) past the player's legal positions — still inside the 30×30 map border. The body-size/offset follow-up is moot with no collider.
+- **Agent review cleanups all done (2026-09-04, human-typed):** `Point2` now imported from `trail.ts` (duplicate removed); dead code trimmed (`stillFrames`, `Trail.at()`, `Trail.atDistance()`); the sprite-anchor y-offset named `SPRITE_Y_OFFSET` in `fox.ts`.
 - **Git state at session note:** Unit 3 work is **uncommitted** (modified: `config.ts`, `bootscene.ts`, `gamescene.ts`; new: `fox.ts`, `player.ts`, `trail.ts`, PC asset + license). Commit & deploy step of Unit 3 pending.

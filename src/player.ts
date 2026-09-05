@@ -1,4 +1,4 @@
-import Phaser from "phaser"
+import type { InputSource } from "./input"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
 const SHEET_COLUMNS = 9 // total columns in sprite sheet
@@ -15,9 +15,9 @@ export class Player {
     this.sprite.body?.setOffset(0, 4)
   }
 
-  move(cursors: Phaser.Types.Input.Keyboard.CursorKeys, speed: number): void {
-    let vx = axisInput(cursors.left.isDown, cursors.right.isDown)
-    let vy = axisInput(cursors.up.isDown, cursors.down.isDown)
+  move(input: InputSource, speed: number): void {
+    let vx = input.x
+    let vy = input.y
 
     if (vx !== 0 && vy !== 0) {
       vx *= Math.SQRT1_2
@@ -51,11 +51,4 @@ export class Player {
     const rowIndex = { down: 0, left: 1, right: 2, up: 3 }[this.facing] ?? 0
     return rowIndex * SHEET_COLUMNS + STAND_COLUMN
   }
-}
-
-function axisInput(negative: boolean, positive: boolean): number {
-  if (negative && positive) return 0
-  if (negative) return -1
-  if (positive) return 1
-  return 0
 }
