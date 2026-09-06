@@ -1,6 +1,6 @@
 /**
  * The input abstraction for the whole game — one contract, three sources, one composite.
- * Defines the Button/Action/Direction unions, KeyboardInput, and the shared guards and axis helper.
+ * Defines the Button/Action/Direction unions and axis helper.
  * Every scene reads player intent through this module; nothing else touches raw keys or DOM.
  */
 export type Direction = "down" | "left" | "right" | "up"
