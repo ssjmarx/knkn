@@ -12,15 +12,26 @@ GameScene drives it from the Trail; it owns no input or pathfinding logic of its
 - **class Fox** — The follower sprite that steers toward a given target point.
   - `chase(target: Point2 | undefined, speed: number)` — Steers toward the target at the given speed, easing in and stopping when close.
 
+## src/actors/npc.ts
+
+The villager actor — a static sprite standing in the world, carrying its conversation.
+Mirrors the player's body footprint with an immovable arcade body so the player bumps into it.
+GameScene spawns these and routes A-presses at them into DialogueSystem via their dialogue table.
+
+- **class Npc** — A standing villager: sprite, body, and the dialogue it speaks.
+  - `overlaps(rect: Phaser.Geom.Rectangle)` — Whether the NPC's body truly overlaps the probe — mere edge contact doesn't count.
+  - `bodyRect()` — The collision body as a plain rectangle, for geometric tests.
+
 ## src/actors/player.ts
 
 The player actor — an arcade sprite driven straight from an InputSource.
-Applies axis velocity with diagonal normalization and swaps walk/stand frames based on facing.
+Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks
 GameScene spawns it and calls move() every frame with the composite controls.
 
 - **class Player** — The player sprite plus its facing state and frame math.
   - `move(input: InputSource, speed: number)` — Applies the input axes as velocity and picks the walk or stand animation.
   - `setFacing(vx: number, vy: number)` — Records the dominant direction of motion as the new facing.
+  - `frontTile()` — The tile's worth of space immediately ahead of the body, in the current facing.
   - `standFrame()` — The standing-pose frame index for the current facing.
 
 ## src/config.ts
@@ -108,7 +119,7 @@ Feeds CompositeInput alongside KeyboardInput and TouchInput; no scene touches th
 
 The keyboard source — maps the keyboard onto the shared Button contract.
 Reads the arrow keys, z and x, enter and esc by default.
-Feeds CompositeInput alongside KeyboardInput and TouchInput; no scene touches the pad directly.
+Feeds CompositeInput alongside GamepadInput and TouchInput; no scene touches the pad directly.
 
 - **class KeyboardInput** — The keyboard source — one Record<Button, Key> table for the whole pad.
   - `x()` — Held left/right as a horizontal axis.
@@ -158,7 +169,7 @@ Registered after BootScene; it owns the composite controls and the dialogue trig
 - **class GameScene** — The world scene: tilemap, actors, controls, and the update loop.
   - `create()` — Builds the map and collision, spawns the actors, and wires the composite input.
   - `update()` — Per frame: move the player and fox — or forward input while dialogue is showing.
-  - `checkDialogueTrigger()` — Starts the trigger's dialogue on the frame the player first enters it.
+  - `tryTalk()` — Talks to whatever NPC stands in the player's facing tile, on a fresh A press.
 
 ## src/ui/dialoguesystem.ts
 

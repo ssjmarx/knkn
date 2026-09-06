@@ -1,9 +1,10 @@
 /**
  * The keyboard source — maps the keyboard onto the shared Button contract.
  * Reads the arrow keys, z and x, enter and esc by default.
- * Feeds CompositeInput alongside KeyboardInput and TouchInput; no scene touches the pad directly.
+ * Feeds CompositeInput alongside GamepadInput and TouchInput; no scene touches the pad directly.
  */
 import { InputSource, Button, axis } from "../core/input"
+import Phaser from "phaser"
 
 /** The keyboard source — one Record<Button, Key> table for the whole pad. */
 export class KeyboardInput implements InputSource {

@@ -15,7 +15,8 @@ import { CompositeInput } from "../input/compositeinput"
 import { GamepadInput } from "../input/gamepadinput"
 import { DialogueSystem } from "../ui/dialoguesystem"
 import { createFlags } from "../core/flags"
-import { npc_greeting } from "../core/dialogues"
+import { npc1_chat, npc2_chat } from "../core/dialogues"
+import { Npc } from "../actors/npc"
 
 /** The world scene: tilemap, actors, controls, and the update loop. */
 export class GameScene extends Phaser.Scene {
@@ -25,7 +26,7 @@ export class GameScene extends Phaser.Scene {
   private controls!: InputSource
   private dialogueSystem!: DialogueSystem
   private flags = createFlags()
-  private wasInsideTrigger = false
+  private npcs!: Npc[]
 
   constructor() {
     super("Game")
@@ -48,11 +49,6 @@ export class GameScene extends Phaser.Scene {
     walls.setCollisionByProperty({ collides: true })
     branches.setDepth(1)
 
-    // Create trigger (simple rectangle for now)
-    const trigger = this.add.rectangle(200, 100, 64, 64, 0xff0000)
-    trigger.setAlpha(0.3) // Semi-transparent so we can see it
-    trigger.setData("dialogue", npc_greeting) // Store dialogue here
-
     const startX = map.widthInPixels / 2
     const startY = map.heightInPixels / 2
 
@@ -63,6 +59,14 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.player.sprite.setCollideWorldBounds(true)
+
+    // tile centers: player start + 32 up and 32 apart
+    // magic numbers but its fine for now
+    this.npcs = [
+      new Npc(this, startX + 16, startY - 32, 4, npc1_chat),
+      new Npc(this, startX - 16, startY - 32, 7, npc2_chat)
+    ]
+    this.physics.add.collider(this.player.sprite, this.npcs.map((npc) => npc.sprite))
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.cameras.main.startFollow(this.player.sprite, true)
@@ -80,6 +84,7 @@ export class GameScene extends Phaser.Scene {
       this.dialogueSystem.handleInput(this.controls)
     } else {
       this.player.move(this.controls, WALK_SPEED)
+      this.tryTalk()
 
       const here = { x: this.player.sprite.x, y: this.player.sprite.y }
       const last = this.trail.last()
@@ -103,32 +108,14 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.controls.endFrame()
-
-    // Check for dialogue trigger
-    this.checkDialogueTrigger()
   }
 
-  /** Starts the trigger's dialogue on the frame the player first enters it. */
-  private checkDialogueTrigger(): void {
-    const trigger = this.children.list.find(
-      (child) => child instanceof Phaser.GameObjects.Rectangle && child.getData("dialogue")
-    ) as Phaser.GameObjects.Rectangle | undefined
+  /** Talks to whatever NPC stands in the player's facing tile, on a fresh A press. */
+  private tryTalk(): void {
+    if (!this.controls.justPressed("a")) return
 
-    if (!trigger) return
-
-    // Check if player is inside the trigger
-    const player = this.player.sprite
-    const triggerBounds = trigger.getBounds()
-
-    const isInside = player.x > triggerBounds.x &&
-                     player.x < triggerBounds.x + triggerBounds.width &&
-                     player.y > triggerBounds.y &&
-                     player.y < triggerBounds.y + triggerBounds.height
-
-    // in checkDialogueTrigger():
-    if (isInside && !this.wasInsideTrigger && !this.dialogueSystem.isShowing) {
-      this.dialogueSystem.showDialogue(trigger.getData("dialogue"), this.flags)
-    }
-    this.wasInsideTrigger = isInside
+    const probe = this.player.frontTile()
+    const npc = this.npcs.find((npc) => npc.overlaps(probe))
+    if (npc) this.dialogueSystem.showDialogue(npc.dialogue, this.flags)
   }
 }

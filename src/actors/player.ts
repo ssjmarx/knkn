@@ -1,12 +1,15 @@
 /**
  * The player actor — an arcade sprite driven straight from an InputSource.
- * Applies axis velocity with diagonal normalization and swaps walk/stand frames based on facing.
+ * Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks
  * GameScene spawns it and calls move() every frame with the composite controls.
  */
 import type { Direction, InputSource } from "../core/input"
+import Phaser from "phaser"
+import { TILE_SIZE } from "../config"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
 const SHEET_COLUMNS = 9 // total columns in sprite sheet
+const PROBE_INSET = 2 // how far the probe reaches back into the player's own body
 
 /** The player sprite plus its facing state and frame math. */
 export class Player {
@@ -53,6 +56,18 @@ export class Player {
     } else {
       this.facing = "down"
     }
+  }
+
+  /** The tile's worth of space immediately ahead of the body, in the current facing. */
+  frontTile(): Phaser.Geom.Rectangle {
+    const body = this.sprite.body!
+    const ahead = {
+      down: new Phaser.Geom.Rectangle(body.left, body.bottom - PROBE_INSET, TILE_SIZE, TILE_SIZE + PROBE_INSET),
+      up: new Phaser.Geom.Rectangle(body.left, body.top - TILE_SIZE, TILE_SIZE, TILE_SIZE + PROBE_INSET),
+      right: new Phaser.Geom.Rectangle(body.right - PROBE_INSET, body.top, TILE_SIZE + PROBE_INSET, TILE_SIZE),
+      left: new Phaser.Geom.Rectangle(body.left - TILE_SIZE, body.top, TILE_SIZE + PROBE_INSET, TILE_SIZE)
+    } satisfies Record<Direction, Phaser.Geom.Rectangle>
+    return ahead[this.facing]
   }
 
   /** The standing-pose frame index for the current facing. */
