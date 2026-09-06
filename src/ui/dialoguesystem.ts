@@ -1,12 +1,28 @@
 /**
- * The dialogue overlay scene — renders conversation text and choices above the game.
+ * The dialogue overlay scene — renders conversation text and choices in a box at the botttom of the game.
  * Steps through Dialogue arrays, resolves conditional text, applies choice flags, and routes input to selection.
- * Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput.
+ * Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput, text displays with a typewriter animation.
  */
 import Phaser from "phaser"
 import type { Flags } from "../core/flags"
 import type { Dialogue, DialogueChoice } from "../core/dialogue"
 import type { InputSource } from "../core/input"
+import { GAME_WIDTH, GAME_HEIGHT } from "../config"
+
+// box geometry — bottom-anchored, derived from the virtual screen
+const BOX_MARGIN = 4
+const BOX_H = 84
+const BOX_W = GAME_WIDTH - BOX_MARGIN * 2
+const BOX_X = BOX_MARGIN
+const BOX_Y = GAME_HEIGHT - BOX_H - BOX_MARGIN
+const TEXT_X = 12
+const TEXT_Y = 158
+const TEXT_WRAP = BOX_W - 2 * (TEXT_X - BOX_X)
+const CHOICE_ROW_Y = 204
+const CHOICE_SPACING = 20
+const CHOICE_W = 200
+const CHOICE_H = 18
+const TYPE_MS_PER_CHAR = 30
 
 /** Overlay scene that walks a Dialogue[] and renders its current line. */
 export class DialogueSystem extends Phaser.Scene {
@@ -18,6 +34,12 @@ export class DialogueSystem extends Phaser.Scene {
   private currentDialogue: Dialogue[] = []
   private currentIndex = 0
   private flags: Flags = {}
+  private box!: Phaser.GameObjects.Rectangle
+  private fullText = ""
+  private shownCount = 0
+  private typeAccumulator = 0
+  private typing = false
+  private pendingChoices: DialogueChoice[] | null = null
 
   isShowing = false
 
@@ -25,17 +47,37 @@ export class DialogueSystem extends Phaser.Scene {
     super("DialogueSystem")
   }
 
-  /** Builds the hidden, centered prompt text object. */
+  /** Builds the hidden bottom-anchored box and the prompt text object.  Hides the box. */
   create(): void {
-    // Prompt text (centered, white text)
-    this.textSprite = this.add.text(120, 100, "", {
+    this.box = this.add.rectangle(BOX_X, BOX_Y, BOX_W, BOX_H, 0x000000)
+      .setOrigin(0, 0)
+      .setStrokeStyle(2, 0xf8f8f8)
+      .setVisible(false)
+
+    this.textSprite = this.add.text(TEXT_X, TEXT_Y, "", {
       fontSize: "14px",
       color: "#ffffff",
-      align: "center",
-      wordWrap: { width: 200 }
+      wordWrap: { width: TEXT_WRAP }
     })
-    this.textSprite.setOrigin(0.5, 0.5)
+    this.textSprite.setOrigin(0, 0)
     this.textSprite.setVisible(false)
+  }
+
+  /** Ticks the typewriter, revealing characters on a fixed cadence. */
+  override update(_time: number, delta: number): void {
+    if (!this.isShowing || !this.typing) return
+
+    this.typeAccumulator += delta
+    while (this.typeAccumulator >= TYPE_MS_PER_CHAR && this.shownCount < this.fullText.length) {
+      this.typeAccumulator -= TYPE_MS_PER_CHAR
+      this.shownCount++
+    }
+
+    if (this.shownCount >= this.fullText.length) {
+      this.finishTyping()
+    } else {
+      this.textSprite.setText(this.fullText.slice(0, this.shownCount))
+    }
   }
 
   /** Starts a conversation, normalizing plain string lines into Dialogue objects. */
@@ -47,42 +89,45 @@ export class DialogueSystem extends Phaser.Scene {
     this.currentIndex = 0
     this.flags = flags
     this.isShowing = true
+    this.box.setVisible(true)
     this.choiceButtons.forEach(btn => btn.destroy())
     this.choiceButtons = []
     this.currentChoices = []
     this.showCurrentLine()
   }
 
-  /** Renders the line at currentIndex, or ends the dialogue when past the last. */
+  /** Renders the first line at-or-after currentIndex whose condition passes, or ends the dialogue. */
   private showCurrentLine(): void {
-    if (this.currentIndex >= this.currentDialogue.length) {
-      this.endDialogue()
+    while (this.currentIndex < this.currentDialogue.length) {
+      const line = this.currentDialogue[this.currentIndex]!
+      if (line.condition && !line.condition(this.flags)) {
+        this.currentIndex++
+        continue
+      }
+
+      const text = typeof line.text === "function" ? line.text(this.flags) : line.text
+      this.pendingChoices = line.choices && line.choices.length > 0 ? line.choices : null
+      this.showText(text)
       return
     }
-
-    const line = this.currentDialogue[this.currentIndex]!
-
-    // #4: resolve and show the text for every line — on choice pages
-    // it's the question the choices are answering
-    const text = typeof line.text === "function" ? line.text(this.flags) : line.text
-    this.showText(text)
-
-    if (line.choices && line.choices.length > 0) {
-      this.showChoices(line.choices)
-    }
+    this.endDialogue()
   }
 
-  /** Swaps in the prompt text and clears any stale choice buttons. */
+  /** Begins typing the given text into the box, clearing any stale choice buttons. */
   private showText(text: string): void {
-    // Clearing old buttons here also means consecutive choice pages
-    // can't stack (bonus fix for #8)
     this.choiceButtons.forEach(btn => btn.destroy())
     this.choiceButtons = []
     this.choiceBackgrounds = []
     this.currentChoices = []
 
-    this.textSprite.setText(text)
+    this.fullText = text
+    this.shownCount = 0
+    this.typeAccumulator = 0
+    this.typing = true
+    this.textSprite.setText("")
     this.textSprite.setVisible(true)
+
+    if (text.length === 0) this.finishTyping()
   }
 
   /** Renders clickable choice buttons below the prompt, first one selected. */
@@ -92,20 +137,20 @@ export class DialogueSystem extends Phaser.Scene {
     this.selectedChoice = 0
 
     choices.forEach((choice, i) => {
-      const button = this.add.container(120, 120 + i * 50)
-
-      const bg = this.add.rectangle(0, 0, 200, 40, 0x444444)
+      const button = this.add.container(GAME_WIDTH / 2, CHOICE_ROW_Y + i * CHOICE_SPACING)
+      const bg = this.add.rectangle(0, 0, CHOICE_W, CHOICE_H, 0x444444)
       const label = this.add.text(0, 0, choice.text, {
-        fontSize: "16px",
+        fontSize: "14px",
         color: "#ffffff"
       })
+
       label.setOrigin(0.5, 0.5)
       button.add([bg, label])
 
       // #5: containers have no width/height of their own, so an
       // explicit hit area is required for pointerdown to ever fire
       button.setInteractive(
-        new Phaser.Geom.Rectangle(-100, -20, 200, 40),
+        new Phaser.Geom.Rectangle(-CHOICE_W / 2, -CHOICE_H / 2, CHOICE_W, CHOICE_H),
         Phaser.Geom.Rectangle.Contains
       )
 
@@ -146,7 +191,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.showCurrentLine()
   }
 
-  /** The A-button continuation path — a thin alias for advance. */
+  /** The A/B button continuation path — a thin alias for advance. */
   private nextLine(): void {
     this.advance()
   }
@@ -162,11 +207,24 @@ export class DialogueSystem extends Phaser.Scene {
     this.selectedChoice = 0
     this.currentDialogue = []
     this.currentIndex = 0
+    this.fullText = ""
+    this.shownCount = 0
+    this.typeAccumulator = 0
+    this.typing = false
+    this.pendingChoices = null
+    this.box.setVisible(false)
   }
 
-  /** Routes just-presses to choice navigation, or to advancing/skipping lines. */
+  /** Routes just-presses to skipping the typewriter, choice navigation, or advancing lines. */
   handleInput(input: InputSource): void {
     if (!this.isShowing) return
+
+    if (this.typing) {
+      if (input.justPressed("a") || input.justPressed("b")) {
+        this.finishTyping()
+      }
+      return
+    }
 
     if (this.choiceButtons.length > 0) {
       if (input.justPressed("up")) {
@@ -186,8 +244,19 @@ export class DialogueSystem extends Phaser.Scene {
         this.nextLine()
       }
       if (input.justPressed("b")) {
-        this.endDialogue()
+        this.nextLine()
       }
+    }
+  }
+
+  /** Completes the typewriter instantly and reveals any choices the line held back. */
+  private finishTyping(): void {
+    this.shownCount = this.fullText.length
+    this.textSprite.setText(this.fullText)
+    this.typing = false
+    if (this.pendingChoices) {
+      this.showChoices(this.pendingChoices)
+      this.pendingChoices = null
     }
   }
 }

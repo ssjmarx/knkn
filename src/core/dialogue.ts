@@ -13,6 +13,7 @@ export type DialogueChoice = {
 
 export type Dialogue = {
   text: string | ((flags: Flags) => string)
+  condition?: (flags: Flags) => boolean
   choices?: DialogueChoice[]
   onComplete?: (flags: Flags) => void
 }

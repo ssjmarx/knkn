@@ -1,10 +1,10 @@
 /**
  * The main play scene — map, actors, and the frame loop that wires them together.
- * Builds the tilemap world, spawns Player and Fox with the Trail between them, and routes input between play and dialogue.
+ * Builds the tilemap world, spawns Player and Fox with the Trail between them, and routes input between play and dialogue.  Updates TOD tint and sprite depth for actors.
  * Registered after BootScene; it owns the composite controls and the dialogue trigger check.
  */
 import Phaser from "phaser"
-import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP } from "../config"
+import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP, GAME_WIDTH, GAME_HEIGHT } from "../config"
 import { Trail } from "../core/trail"
 import { Player } from "../actors/player"
 import { Fox } from "../actors/fox"
@@ -15,8 +15,9 @@ import { CompositeInput } from "../input/compositeinput"
 import { GamepadInput } from "../input/gamepadinput"
 import { DialogueSystem } from "../ui/dialoguesystem"
 import { createFlags } from "../core/flags"
-import { npc1_chat, npc2_chat } from "../core/dialogues"
-import { Npc } from "../actors/npc"
+import { npc1_chat, npc2_chat, fox_bark } from "../core/dialogues"
+import { Npc, OPPOSITE } from "../actors/npc"
+import { tintForHour } from "../core/daynight"
 
 /** The world scene: tilemap, actors, controls, and the update loop. */
 export class GameScene extends Phaser.Scene {
@@ -27,6 +28,8 @@ export class GameScene extends Phaser.Scene {
   private dialogueSystem!: DialogueSystem
   private flags = createFlags()
   private npcs!: Npc[]
+  private sortables: Phaser.Physics.Arcade.Sprite[] = []
+  private tintOverlay!: Phaser.GameObjects.Rectangle
 
   constructor() {
     super("Game")
@@ -47,7 +50,7 @@ export class GameScene extends Phaser.Scene {
     const walls = map.createLayer("walls", tileset)
     const branches = map.createLayer("branches", tileset)
     walls.setCollisionByProperty({ collides: true })
-    branches.setDepth(1)
+    branches.setDepth(500) // higher than all other sprites
 
     const startX = map.widthInPixels / 2
     const startY = map.heightInPixels / 2
@@ -67,9 +70,15 @@ export class GameScene extends Phaser.Scene {
       new Npc(this, startX - 16, startY - 32, 7, npc2_chat)
     ]
     this.physics.add.collider(this.player.sprite, this.npcs.map((npc) => npc.sprite))
+    this.sortables = [this.player.sprite, this.fox.sprite, ...this.npcs.map((npc) => npc.sprite)]
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.cameras.main.startFollow(this.player.sprite, true)
+
+    this.tintOverlay = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(1000) // higher than EVERYTHING
 
     this.controls = new CompositeInput(
       new KeyboardInput(this),
@@ -81,6 +90,9 @@ export class GameScene extends Phaser.Scene {
   /** Per frame: move the player and fox — or forward input while dialogue is showing. */
   override update(): void {
     if (this.dialogueSystem.isShowing) {
+      this.player.halt()
+      this.fox.sprite.setVelocity(0, 0)
+      this.fox.sprite.play("fox-idle", true)
       this.dialogueSystem.handleInput(this.controls)
     } else {
       this.player.move(this.controls, WALK_SPEED)
@@ -107,6 +119,8 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
+    this.applyTint()
+    this.sortByDepth()
     this.controls.endFrame()
   }
 
@@ -116,6 +130,30 @@ export class GameScene extends Phaser.Scene {
 
     const probe = this.player.frontTile()
     const npc = this.npcs.find((npc) => npc.overlaps(probe))
-    if (npc) this.dialogueSystem.showDialogue(npc.dialogue, this.flags)
+    if (npc) {
+      npc.face(OPPOSITE[this.player.facing])
+      this.dialogueSystem.showDialogue(npc.dialogue, this.flags)
+      return
+    }
+
+    const foxBody = this.fox.sprite.body
+    if (foxBody &&
+        probe.x < foxBody.right && foxBody.left < probe.right &&
+        probe.y < foxBody.bottom && foxBody.top < probe.bottom) {
+      this.dialogueSystem.showDialogue(fox_bark, this.flags)
+    }
+  }
+
+  /** Keeps world sprites stacked by their feet, so whoever stands lower renders in front. */
+  private sortByDepth(): void {
+    for (const sprite of this.sortables) {
+      sprite.setDepth(sprite.body ? sprite.body.bottom : sprite.y)
+    }
+  }
+
+  /** Applies the wall-clock tint to the full-screen overlay. */
+  private applyTint(): void {
+    const tint = tintForHour(new Date().getHours())
+    this.tintOverlay.setFillStyle(tint.color, tint.alpha)
   }
 }

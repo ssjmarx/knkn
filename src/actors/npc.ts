@@ -5,15 +5,24 @@
  */
 import Phaser from "phaser"
 import type { Dialogue } from "../core/dialogue"
+import type { Direction } from "../core/input"
+import { ROW_INDEX, SHEET_COLUMNS } from "./pcsheet"
+
+// the gaze-mirror: which way to face when the player faces you
+export const OPPOSITE: Record<Direction, Direction> = { down: "up", up: "down", left: "right", right: "left" }
 
 /** A standing villager: sprite, body, and the dialogue it speaks. */
 export class Npc {
   readonly sprite: Phaser.Physics.Arcade.Sprite
   readonly dialogue: Dialogue[]
 
-  constructor(scene: Phaser.Scene, x: number, y: number, standFrame: number, dialogue: Dialogue[]) {
+  private readonly standColumn: number
+
+  constructor(scene: Phaser.Scene, x: number, y: number, standColumn: number, dialogue: Dialogue[]) {
     this.sprite = scene.physics.add.sprite(x, y, "pc")
-    this.sprite.setFrame(standFrame)
+    this.standColumn = standColumn
+    this.sprite.setFrame(standColumn)
+
     this.dialogue = dialogue
 
     this.sprite.body?.setSize(16, 16)
@@ -32,5 +41,10 @@ export class Npc {
   private bodyRect(): Phaser.Geom.Rectangle {
     const body = this.sprite.body!
     return new Phaser.Geom.Rectangle(body.left, body.top, body.width, body.height)
+  }
+
+  /** Turns to the stand pose facing the given direction. */
+  face(direction: Direction): void {
+    this.sprite.setFrame(ROW_INDEX[direction] * SHEET_COLUMNS + this.standColumn)
   }
 }

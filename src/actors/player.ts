@@ -1,20 +1,20 @@
 /**
- * The player actor — an arcade sprite driven straight from an InputSource.
- * Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks
+ * The player actor — an arcade sprite driven straight from an InputSource and can be halted for dialogue.
+ * Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks.
  * GameScene spawns it and calls move() every frame with the composite controls.
  */
 import type { Direction, InputSource } from "../core/input"
 import Phaser from "phaser"
 import { TILE_SIZE } from "../config"
+import { SHEET_COLUMNS, ROW_INDEX } from "./pcsheet"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
-const SHEET_COLUMNS = 9 // total columns in sprite sheet
 const PROBE_INSET = 2 // how far the probe reaches back into the player's own body
 
 /** The player sprite plus its facing state and frame math. */
 export class Player {
   readonly sprite: Phaser.Physics.Arcade.Sprite
-  private facing: Direction = "down"
+  private _facing: Direction = "down"
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.sprite = scene.physics.add.sprite(x, y, "pc")
@@ -22,6 +22,11 @@ export class Player {
 
     this.sprite.body?.setSize(16, 16)
     this.sprite.body?.setOffset(0, 4)
+  }
+
+  /** The direction the player currently faces. */
+  get facing(): Direction {
+    return this._facing
   }
 
   /** Applies the input axes as velocity and picks the walk or stand animation. */
@@ -48,13 +53,13 @@ export class Player {
   /** Records the dominant direction of motion as the new facing. */
   private setFacing(vx: number, vy: number): void {
     if (vx < 0) {
-      this.facing = "left"
+      this._facing = "left"
     } else if (vx > 0) {
-      this.facing = "right"
+      this._facing = "right"
     } else if (vy < 0) {
-      this.facing = "up"
+      this._facing = "up"
     } else {
-      this.facing = "down"
+      this._facing = "down"
     }
   }
 
@@ -72,7 +77,13 @@ export class Player {
 
   /** The standing-pose frame index for the current facing. */
   private standFrame(): number {
-    const rowIndex = { down: 0, left: 1, right: 2, up: 3 }[this.facing]
-    return rowIndex * SHEET_COLUMNS + STAND_COLUMN
+    return ROW_INDEX[this._facing] * SHEET_COLUMNS + STAND_COLUMN
+  }
+
+  /** Stops the player dead: velocity zeroed, walk animation halted, stand frame shown. */
+  halt(): void {
+    this.sprite.setVelocity(0, 0)
+    this.sprite.stop()
+    this.sprite.setFrame(this.standFrame())
   }
 }

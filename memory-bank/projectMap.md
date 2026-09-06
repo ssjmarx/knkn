@@ -21,18 +21,28 @@ GameScene spawns these and routes A-presses at them into DialogueSystem via thei
 - **class Npc** — A standing villager: sprite, body, and the dialogue it speaks.
   - `overlaps(rect: Phaser.Geom.Rectangle)` — Whether the NPC's body truly overlaps the probe — mere edge contact doesn't count.
   - `bodyRect()` — The collision body as a plain rectangle, for geometric tests.
+  - `face(direction: Direction)` — Turns to the stand pose facing the given direction.
+
+## src/actors/pcsheet.ts
+
+The PC sheet's shared geometry — column count and the facing-row lookup.
+One home for the frame math Player and Npc both perform, so the two can never disagree.
+Any actor drawn from the Super Retro World character sheet imports these.
+
 
 ## src/actors/player.ts
 
-The player actor — an arcade sprite driven straight from an InputSource.
-Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks
+The player actor — an arcade sprite driven straight from an InputSource and can be halted for dialogue.
+Applies axis velocity with diagonal normalization swaps walk/stand frames based on facing, and answers the front-tile probe for NPC talks.
 GameScene spawns it and calls move() every frame with the composite controls.
 
 - **class Player** — The player sprite plus its facing state and frame math.
+  - `facing()` — The direction the player currently faces.
   - `move(input: InputSource, speed: number)` — Applies the input axes as velocity and picks the walk or stand animation.
   - `setFacing(vx: number, vy: number)` — Records the dominant direction of motion as the new facing.
   - `frontTile()` — The tile's worth of space immediately ahead of the body, in the current facing.
   - `standFrame()` — The standing-pose frame index for the current facing.
+  - `halt()` — Stops the player dead: velocity zeroed, walk animation halted, stand frame shown.
 
 ## src/config.ts
 
@@ -40,6 +50,14 @@ Global tuning constants — screen size, tile size, speeds, and follower spacing
 Exports plain numbers only; nothing here is computed or ever changes at runtime.
 Every module that needs a shared magic number imports from here instead of hardcoding it.
 
+
+## src/core/daynight.ts
+
+The day/night tint table — a pure lookup from wall-clock hour to overlay color and strength.
+No Phaser, no DOM: the phases are plain data, ready for Vitest when Unit 6 arrives.
+GameScene asks every frame and paints the result onto its full-screen overlay.
+
+- `tintForHour(hour: number)` — The overlay tint for a given hour (0–23); any hour no phase covers gets plain day.
 
 ## src/core/dialogue.ts
 
@@ -163,29 +181,33 @@ First scene in Phaser's list; nothing renders until its work is done.
 ## src/scenes/gamescene.ts
 
 The main play scene — map, actors, and the frame loop that wires them together.
-Builds the tilemap world, spawns Player and Fox with the Trail between them, and routes input between play and dialogue.
+Builds the tilemap world, spawns Player and Fox with the Trail between them, and routes input between play and dialogue.  Updates TOD tint and sprite depth for actors.
 Registered after BootScene; it owns the composite controls and the dialogue trigger check.
 
 - **class GameScene** — The world scene: tilemap, actors, controls, and the update loop.
   - `create()` — Builds the map and collision, spawns the actors, and wires the composite input.
   - `update()` — Per frame: move the player and fox — or forward input while dialogue is showing.
   - `tryTalk()` — Talks to whatever NPC stands in the player's facing tile, on a fresh A press.
+  - `sortByDepth()` — Keeps world sprites stacked by their feet, so whoever stands lower renders in front.
+  - `applyTint()` — Applies the wall-clock tint to the full-screen overlay.
 
 ## src/ui/dialoguesystem.ts
 
-The dialogue overlay scene — renders conversation text and choices above the game.
+The dialogue overlay scene — renders conversation text and choices in a box at the botttom of the game.
 Steps through Dialogue arrays, resolves conditional text, applies choice flags, and routes input to selection.
-Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput.
+Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput, text displays with a typewriter animation.
 
 - **class DialogueSystem** — Overlay scene that walks a Dialogue[] and renders its current line.
-  - `create()` — Builds the hidden, centered prompt text object.
+  - `create()` — Builds the hidden bottom-anchored box and the prompt text object.  Hides the box.
+  - `update(_time: number, delta: number)` — Ticks the typewriter, revealing characters on a fixed cadence.
   - `showDialogue(dialogue: Dialogue[] | string[], flags: Flags)` — Starts a conversation, normalizing plain string lines into Dialogue objects.
-  - `showCurrentLine()` — Renders the line at currentIndex, or ends the dialogue when past the last.
-  - `showText(text: string)` — Swaps in the prompt text and clears any stale choice buttons.
+  - `showCurrentLine()` — Renders the first line at-or-after currentIndex whose condition passes, or ends the dialogue.
+  - `showText(text: string)` — Begins typing the given text into the box, clearing any stale choice buttons.
   - `showChoices(choices: DialogueChoice[])` — Renders clickable choice buttons below the prompt, first one selected.
   - `selectChoice(index: number)` — Highlights the given choice index and records it as selected.
   - `makeChoice(choice: DialogueChoice)` — Applies the choice's flag effect and advances the dialogue.
   - `advance()` — Runs the line's onComplete, moves to the next line, and shows it.
-  - `nextLine()` — The A-button continuation path — a thin alias for advance.
+  - `nextLine()` — The A/B button continuation path — a thin alias for advance.
   - `endDialogue()` — Hides the prompt and resets all dialogue state.
-  - `handleInput(input: InputSource)` — Routes just-presses to choice navigation, or to advancing/skipping lines.
+  - `handleInput(input: InputSource)` — Routes just-presses to skipping the typewriter, choice navigation, or advancing lines.
+  - `finishTyping()` — Completes the typewriter instantly and reveals any choices the line held back.
