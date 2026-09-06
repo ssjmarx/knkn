@@ -3,7 +3,7 @@
  * Reads the arrow keys, z and x, enter and esc by default.
  * Feeds CompositeInput alongside KeyboardInput and TouchInput; no scene touches the pad directly.
  */
-import { Action, Direction, InputSource, Button, axis, isAction, isDirection } from "../core/input"
+import { InputSource, Button, axis } from "../core/input"
 
 /** The keyboard source — one Record<Button, Key> table for the whole pad. */
 export class KeyboardInput implements InputSource {

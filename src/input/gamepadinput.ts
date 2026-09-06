@@ -4,7 +4,7 @@
  * Feeds CompositeInput alongside KeyboardInput and TouchInput; no scene touches the pad directly.
  */
 import Phaser from "phaser"
-import { Action, InputSource, Button, Direction, axis, isAction, isDirection } from "../core/input"
+import { Action, InputSource, Button, axis, isDirection } from "../core/input"
 
 /** InputSource backed by the first connected gamepad. */
 export class GamepadInput implements InputSource {
