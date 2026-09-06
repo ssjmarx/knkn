@@ -4,7 +4,7 @@
  * GameScene drives it from the Trail; it owns no input or pathfinding logic of its own.
  */
 import Phaser from "phaser"
-import type { Point2 } from "./trail"
+import type { Point2 } from "../core/trail"
 
 const STOP_RADIUS = 1 // px
 const GAIN = 16 // how hard the fox steers toward its target

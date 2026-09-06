@@ -3,7 +3,7 @@
  * Combines keyboard, touch, and gamepad sources, OR-ing buttons and picking the strongest axis.
  * GameScene constructs it once and reads all player intent through this single object.
  */
-import type { Button, InputSource } from "./input"
+import type { Button, InputSource } from "../core/input"
 
 /** Merges several InputSources into one — any source speaking counts. */
 export class CompositeInput implements InputSource {

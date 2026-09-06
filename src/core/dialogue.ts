@@ -3,7 +3,7 @@
  * Declares Dialogue and DialogueChoice as plain data, with optional flag effects and per-line callbacks.
  * dialogues.ts authors content in these shapes; DialogueSystem consumes them at runtime.
  */
-import type { Flags } from "./flags"
+import type { Flags } from "../core/flags"
 
 export type DialogueChoice = {
   text: string

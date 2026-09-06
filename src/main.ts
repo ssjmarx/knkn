@@ -7,7 +7,7 @@ import Phaser from "phaser"
 import { GAME_WIDTH, GAME_HEIGHT } from "./config"
 import { BootScene } from "./scenes/bootscene"
 import { GameScene } from "./scenes/gamescene"
-import { DialogueSystem } from "./dialoguesystem"
+import { DialogueSystem } from "./ui/dialoguesystem"
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,

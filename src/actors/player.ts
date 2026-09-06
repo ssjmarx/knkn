@@ -3,7 +3,7 @@
  * Applies axis velocity with diagonal normalization and swaps walk/stand frames based on facing.
  * GameScene spawns it and calls move() every frame with the composite controls.
  */
-import type { Direction, InputSource } from "./input"
+import type { Direction, InputSource } from "../core/input"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
 const SHEET_COLUMNS = 9 // total columns in sprite sheet

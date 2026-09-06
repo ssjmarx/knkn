@@ -5,16 +5,17 @@
  */
 import Phaser from "phaser"
 import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP } from "../config"
-import { Trail } from "../trail"
-import { Player } from "../player"
-import { Fox } from "../fox"
-import { KeyboardInput, InputSource } from "../input"
-import { TouchInput } from "../touchinput"
-import { CompositeInput } from "../compositeinput"
-import { GamepadInput } from "../gamepadinput"
-import { DialogueSystem } from "../dialoguesystem"
-import { createFlags } from "../flags"
-import { npc_greeting } from "../dialogues"
+import { Trail } from "../core/trail"
+import { Player } from "../actors/player"
+import { Fox } from "../actors/fox"
+import { InputSource } from "../core/input"
+import { KeyboardInput } from "../input/keyboardinput"
+import { TouchInput } from "../input/touchinput"
+import { CompositeInput } from "../input/compositeinput"
+import { GamepadInput } from "../input/gamepadinput"
+import { DialogueSystem } from "../ui/dialoguesystem"
+import { createFlags } from "../core/flags"
+import { npc_greeting } from "../core/dialogues"
 
 /** The world scene: tilemap, actors, controls, and the update loop. */
 export class GameScene extends Phaser.Scene {

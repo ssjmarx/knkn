@@ -1,12 +1,17 @@
 /**
  * The dialogue overlay scene — renders conversation text and choices above the game.
  * Steps through Dialogue arrays, resolves conditional text, applies choice flags, and routes input to selection.
- * Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput.
+ * Runs as a parallel Phaser scene; GameScene hands it content a
+ * 
+ * 
+ * 
+ * 
+ * nd polls isShowing/handleInput.
  */
 import Phaser from "phaser"
-import type { Flags } from "./flags"
-import type { Dialogue, DialogueChoice, } from "./dialogue"
-import type { InputSource } from "./input"
+import type { Flags } from "../core/flags"
+import type { Dialogue, DialogueChoice, } from "../core/dialogue"
+import type { InputSource } from "../core/input"
 
 /** Overlay scene that walks a Dialogue[] and renders its current line. */
 export class DialogueSystem extends Phaser.Scene {

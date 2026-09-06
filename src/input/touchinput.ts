@@ -3,7 +3,7 @@
  * Tracks each finger across down/move/up, mapping it to whichever button it's over and latching just-presses.
  * Feeds CompositeInput for mobile play; scenes never query the DOM buttons themselves.
  */
-import { Action, Direction, InputSource, Button, axis, isAction, isDirection } from "./input"
+import { Action, Direction, InputSource, Button, axis, isAction, isDirection } from "../core/input"
 
 /** InputSource backed by on-screen buttons under finger tracking. */
 export class TouchInput implements InputSource {
