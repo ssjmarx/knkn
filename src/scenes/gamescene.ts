@@ -1,5 +1,8 @@
-// src/scenes/gamescene.ts
-
+/**
+ * The main play scene — map, actors, and the frame loop that wires them together.
+ * Builds the tilemap world, spawns Player and Fox with the Trail between them, and routes input between play and dialogue.
+ * Registered after BootScene; it owns the composite controls and the dialogue trigger check.
+ */
 import Phaser from "phaser"
 import { TILE_SIZE, WALK_SPEED, TRAIL_SIZE, FOLLOW_GAP } from "../config"
 import { Trail } from "../trail"
@@ -13,6 +16,7 @@ import { DialogueSystem } from "../dialoguesystem"
 import { createFlags } from "../flags"
 import { npc_greeting } from "../dialogues"
 
+/** The world scene: tilemap, actors, controls, and the update loop. */
 export class GameScene extends Phaser.Scene {
   private player!: Player
   private fox!: Fox
@@ -26,6 +30,7 @@ export class GameScene extends Phaser.Scene {
     super("Game")
   }
 
+  /** Builds the map and collision, spawns the actors, and wires the composite input. */
   create(): void {
     const map = this.make.tilemap({ key: "map" })
     if (map.tileWidth !== TILE_SIZE || map.tileHeight !== TILE_SIZE) {
@@ -68,6 +73,7 @@ export class GameScene extends Phaser.Scene {
     )
   }
 
+  /** Per frame: move the player and fox — or forward input while dialogue is showing. */
   override update(): void {
     if (this.dialogueSystem.isShowing) {
       this.dialogueSystem.handleInput(this.controls)
@@ -101,6 +107,7 @@ export class GameScene extends Phaser.Scene {
     this.checkDialogueTrigger()
   }
 
+  /** Starts the trigger's dialogue on the frame the player first enters it. */
   private checkDialogueTrigger(): void {
     const trigger = this.children.list.find(
       (child) => child instanceof Phaser.GameObjects.Rectangle && child.getData("dialogue")

@@ -20,7 +20,7 @@ Before starting any task — including answering a quick question — read every
 6. `memory-bank/progress.md` — done / not-done / decisions
 7. `memory-bank/design.md` — the full game design canon (lock v1.0)
 8. `memory-bank/syllabus.md` — the full course & dev roadmap
-9. `memory-bank/projectmap.md` — a map of the project's files
+9. `memory-bank/projectMap.md` — the generated module map (`npm run map` — do not hand-edit)
 10. `memory-bank/instructions.md` — a copy of the .clinerules
 
 **The memory bank is the authoritative design document as far as you are concerned** — and, since `planning/` was retired into git history on 2026-09-03, the sole source of truth. If code or anything else in the repo conflicts with the bank, do not guess: surface the conflict to the human, ask which is current, then sync the bank to their ruling.

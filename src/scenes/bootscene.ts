@@ -1,10 +1,17 @@
+/**
+ * The boot scene — loads every asset and animation before play begins.
+ * Preloads the sprite sheets and tilemap, registers the pc/fox animations, then hands off to GameScene.
+ * First scene in Phaser's list; nothing renders until its work is done.
+ */
 import Phaser from "phaser"
 
+/** Asset-load-and-handoff scene; runs once at startup. */
 export class BootScene extends Phaser.Scene {
   constructor() {
     super("Boot")
   }
 
+  /** Loads the pc/fox sprite sheets, tileset image, and tilemap JSON. */
   preload(): void {
     this.load.spritesheet("pc", "assets/free_character_1-3_super_retro_world.png", {
       frameWidth: 16,
@@ -21,6 +28,7 @@ export class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "assets/test_area.json")
   }
 
+  /** Registers the walk/idle animations for both sprites and starts GameScene. */
   create(): void {
     const walkIndex = 28
     const idleIndex = 0

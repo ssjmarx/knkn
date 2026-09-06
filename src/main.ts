@@ -1,3 +1,8 @@
+/**
+ * The entry point — boots Phaser with the game's config and scene list.
+ * Builds the 240×240 pixel-art arcade-physics game, registers Boot, Game, and DialogueSystem, and mounts it.
+ * index.html loads this via Vite; every other module hangs off the scenes registered here.
+ */
 import Phaser from "phaser"
 import { GAME_WIDTH, GAME_HEIGHT } from "./config"
 import { BootScene } from "./scenes/bootscene"

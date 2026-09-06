@@ -1,8 +1,14 @@
+/**
+ * The player actor — an arcade sprite driven straight from an InputSource.
+ * Applies axis velocity with diagonal normalization and swaps walk/stand frames based on facing.
+ * GameScene spawns it and calls move() every frame with the composite controls.
+ */
 import type { Direction, InputSource } from "./input"
 
 const STAND_COLUMN = 1 // column of sprite sheet with standing pose
 const SHEET_COLUMNS = 9 // total columns in sprite sheet
 
+/** The player sprite plus its facing state and frame math. */
 export class Player {
   readonly sprite: Phaser.Physics.Arcade.Sprite
   private facing: Direction = "down"
@@ -15,6 +21,7 @@ export class Player {
     this.sprite.body?.setOffset(0, 4)
   }
 
+  /** Applies the input axes as velocity and picks the walk or stand animation. */
   move(input: InputSource, speed: number): void {
     let vx = input.x
     let vy = input.y
@@ -35,6 +42,7 @@ export class Player {
     }
   }
 
+  /** Records the dominant direction of motion as the new facing. */
   private setFacing(vx: number, vy: number): void {
     if (vx < 0) {
       this.facing = "left"
@@ -47,6 +55,7 @@ export class Player {
     }
   }
 
+  /** The standing-pose frame index for the current facing. */
   private standFrame(): number {
     const rowIndex = { down: 0, left: 1, right: 2, up: 3 }[this.facing]
     return rowIndex * SHEET_COLUMNS + STAND_COLUMN

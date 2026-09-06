@@ -1,5 +1,8 @@
-// src/dialogues.ts
-
+/**
+ * The game's dialogue content — sample conversations exercising every Dialogue feature.
+ * Exports const tables of Dialogue (plus one string[]) covering plain text, choices, flag reads, and callbacks.
+ * GameScene attaches these to trigger rectangles; DialogueSystem renders whatever they describe.
+ */
 import type { Flags } from "./flags"
 import type { Dialogue } from "./dialogue"
 

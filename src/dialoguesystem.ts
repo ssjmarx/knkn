@@ -1,8 +1,14 @@
+/**
+ * The dialogue overlay scene — renders conversation text and choices above the game.
+ * Steps through Dialogue arrays, resolves conditional text, applies choice flags, and routes input to selection.
+ * Runs as a parallel Phaser scene; GameScene hands it content and polls isShowing/handleInput.
+ */
 import Phaser from "phaser"
 import type { Flags } from "./flags"
 import type { Dialogue, DialogueChoice, } from "./dialogue"
 import type { InputSource } from "./input"
 
+/** Overlay scene that walks a Dialogue[] and renders its current line. */
 export class DialogueSystem extends Phaser.Scene {
   private textSprite!: Phaser.GameObjects.Text
   private choiceButtons: Phaser.GameObjects.Container[] = []
@@ -19,6 +25,7 @@ export class DialogueSystem extends Phaser.Scene {
     super("DialogueSystem")
   }
 
+  /** Builds the hidden, centered prompt text object. */
   create(): void {
     // Prompt text (centered, white text)
     this.textSprite = this.add.text(120, 100, "", {
@@ -31,6 +38,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.textSprite.setVisible(false)
   }
 
+  /** Starts a conversation, normalizing plain string lines into Dialogue objects. */
   showDialogue(dialogue: Dialogue[] | string[], flags: Flags): void {
     // Convert string lines to Dialogue objects if needed
     this.currentDialogue = dialogue.map((line) =>
@@ -45,6 +53,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.showCurrentLine()
   }
 
+  /** Renders the line at currentIndex, or ends the dialogue when past the last. */
   private showCurrentLine(): void {
     if (this.currentIndex >= this.currentDialogue.length) {
       this.endDialogue()
@@ -63,6 +72,7 @@ export class DialogueSystem extends Phaser.Scene {
     }
   }
 
+  /** Swaps in the prompt text and clears any stale choice buttons. */
   private showText(text: string): void {
     // Clearing old buttons here also means consecutive choice pages
     // can't stack (bonus fix for #8)
@@ -75,6 +85,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.textSprite.setVisible(true)
   }
 
+  /** Renders clickable choice buttons below the prompt, first one selected. */
   private showChoices(choices: DialogueChoice[]): void {
     // #4: the prompt stays visible; choices render below it
     this.currentChoices = choices
@@ -109,6 +120,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.selectChoice(0)
   }
 
+  /** Highlights the given choice index and records it as selected. */
   private selectChoice(index: number): void {
     this.selectedChoice = index
     this.choiceBackgrounds.forEach((bg, i) => {
@@ -116,6 +128,7 @@ export class DialogueSystem extends Phaser.Scene {
     })
   }
 
+  /** Applies the choice's flag effect and advances the dialogue. */
   private makeChoice(choice: DialogueChoice): void {
     if (choice.flag && choice.value !== undefined) {
       this.flags[choice.flag] = choice.value
@@ -123,6 +136,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.advance()
   }
 
+  /** Runs the line's onComplete, moves to the next line, and shows it. */
   private advance(): void {
     const line = this.currentDialogue[this.currentIndex]
     if (line && line.onComplete) {
@@ -132,10 +146,12 @@ export class DialogueSystem extends Phaser.Scene {
     this.showCurrentLine()
   }
 
+  /** The A-button continuation path — a thin alias for advance. */
   private nextLine(): void {
     this.advance()
   }
 
+  /** Hides the prompt and resets all dialogue state. */
   private endDialogue(): void {
     this.isShowing = false
     this.textSprite.setVisible(false)
@@ -148,6 +164,7 @@ export class DialogueSystem extends Phaser.Scene {
     this.currentIndex = 0
   }
 
+  /** Routes just-presses to choice navigation, or to advancing/skipping lines. */
   handleInput(input: InputSource): void {
     if (!this.isShowing) return
 
