@@ -9,6 +9,7 @@
 - **JSON data tables + TS interfaces** — typechart, moves, rites, stones, ladders, schedules, flags
 - **CI from day one** — typecheck + tests + build + deploy on every milestone
 - **Web-first deployment** — `knkn.dunaway.io` on the human's personal server (resolved 2026-09-03; see Infrastructure decisions); desktop/store packaging (Tauri/Electron/Capacitor/Tauri 2) deferred to Semester 4
+- **Layered source layout (ruled 2026-09-05):** `src/core/` = pure logic (input contract, flags, dialogue types+data, trail) — **zero Phaser imports, enforced by `grep -rni phaser src/core/` returning nothing**; `src/input/` = the Phaser-bound sources (keyboard, touch, gamepad, composite); `src/actors/` = player + fox; `src/scenes/` = world scenes; `src/ui/` = UI scenes (dialoguesystem now; menus/Codex later); `main.ts` + `config.ts` at the root. `"noUnusedLocals": true` keeps dead imports out.
 
 ## Presentation constraints
 

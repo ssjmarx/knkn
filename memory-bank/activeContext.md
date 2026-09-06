@@ -3,10 +3,10 @@
 > The living file. Future agents: read this after the brief/context files; update it at session end. Date every entry. Facts only.
 > **Retention (ruled 2026-09-05):** keep detailed history only for the last two units — older unit history compresses to one-liners; the unit tracker and decision log in `progress.md` carry the durable facts; deep history lives in git.
 
-## Current state (2026-09-05, later — the Cartographer session; Unit 5 complete)
+## Current state (2026-09-05, third session — the restructure; Unit 5 complete)
 
 - **Phase: Milestone 1 finish line.** U0–U5 complete. Remaining for M1: the flag→dialogue challenge (folded in from U5) + the day/night tint — then **The Walk ships** (one map, follower, tint, dialogue tree, three input modes, deployed).
-- **Git/deploy:** branch `master`, HEAD `ceb9a99` ("memory bank: Unit 5 complete — bank compressed"), pushed. **The Cartographer work is uncommitted** (docstrings across all 15 src modules, `scripts/projectmap.ts`, package/tsconfig changes, the regenerated map). Latest deploy 2026-09-05 15:24 — the dialogue build, unaffected by this session; no deploy needed. CI not yet built.
+- **Git/deploy:** branch `master`, HEAD `9156100`, tree clean, pushed. Latest deploy 2026-09-05 15:24 — the dialogue build; this session changed no shipped behavior, no deploy needed. CI not yet built.
 - **Unit one-liners (detail → `progress.md`):** U0 dev env + scaffold (09-03) · U1 walking fox (09-03) · U2 Tiled world + 240×240 ruling (09-04) · U3 the follower (09-04) · U4 three-mode input (09-04) · U5 dialogue engine + flag store + the one-pad input map (09-05).
 - The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
@@ -58,4 +58,14 @@ At the end of every session: update this file and `progress.md` (dated, factual)
 - **Strict mode (user ruling):** a missing or malformed docstring → exit 1, a violation list with `path:line` coordinates, and the map refuses to write. Convention-as-compiler — the same philosophy as `Record` exhaustiveness.
 - **Parser lessons (the debugging arc):** anchored head-matching kills false positives (`if (…)` and `.forEach((key) =>` can never match "name immediately followed by `(`"); the `CONTROL` keyword blacklist is belt-and-suspenders; the `inTypeBody` state machine — interface members are *syntactically identical* to class methods, so context must be carried as state (the fourth state machine this month); the self-destructing comment (a `*/` inside a comment ends it — the convention cannot quote its own delimiter); `noUncheckedIndexedAccess` bites array indexing AND regex captures (`match[1]` is `string | undefined`) — six `!`s, each with a written proof; and the IDE panel under-reports — `./node_modules/.bin/tsc --noEmit` is the court.
 - **Map generated clean: 15 modules.** Side effect worth savoring: the map now *displays* parked residuals (e.g. `isDown(action: Button)` in compositeinput — the old param name, visible in the docs until cleaned).
-- **Uncommitted** — commit & push pending.
+- Committed as `501e459` ("made some tooling hooray") and pushed.
+
+## Session update (2026-09-05, third — the restructure: layers made physical)
+
+- **Interlude, not a unit.** The M1 finish line is unchanged (flag→dialogue challenge + day/night tint).
+- **Ruling — layered source layout:** `src/core/` (pure logic: input contract, flags, dialogue types+data, trail — **zero Phaser imports, enforced by `grep -rni phaser src/core/` returning silence**), `src/input/` (keyboard, touch, gamepad, composite sources), `src/actors/` (player, fox), `src/scenes/` (boot, game), `src/ui/` (dialoguesystem — future menus/Codex), `main.ts` + `config.ts` at root. Locked decision #3 is now a filesystem fact, not just a doc bullet.
+- **Ruling — input contract split:** `core/input.ts` holds Direction/Action/Button, `InputSource`, `axis`, and the guards; `input/keyboardinput.ts` holds KeyboardInput (the only Phaser-bound half). The map grew to 16 modules.
+- **Ruling — `"noUnusedLocals": true`:** the compiler now catches dead imports, which the review had found the tooling never flagged.
+- **How it went:** VS Code's update-imports-on-move did the mechanical work (drag files between folders, imports rewritten) — the human's first taste of tooling doing refactor chores; the module-resolution break-it got skipped, deferred to a 60-second manual exercise. Review catches: the dialoguesystem module docstring had been mangled mid-word by the move ("…content and a ␣␣␣ nd polls…" — strict mode would have refused to write the map; repaired before running), a false docstring in keyboardinput ("alongside KeyboardInput" — it IS KeyboardInput), and the dead imports above. All riders landed: trailing comma gone, `as Button[]` cast fixed.
+- **Verified:** `tsc` clean via the CLI court; `grep -rni phaser src/core/` silent; map regenerated under the new tree (16 modules, grouped by layer); playtest on the dev server.
+- **Residual (third flag, still open):** two one-word docstring fixes — `core/input.ts` module line 2 still names KeyboardInput, and `keyboardinput.ts` line 4 still says "alongside KeyboardInput"; both publish into the generated map until fixed and `npm run map` is re-run. Commits: `d993b42` (restructure) + `9156100` (review fixes), pushed.

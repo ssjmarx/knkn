@@ -59,7 +59,7 @@ Dialogue choices write through DialogueSystem; conditional dialogue text reads f
 ## src/core/input.ts
 
 The input abstraction for the whole game — one contract, three sources, one composite.
-Defines the Button/Action/Direction unions, KeyboardInput, and the shared guards and axis helper.
+Defines the Button/Action/Direction unions and axis helper.
 Every scene reads player intent through this module; nothing else touches raw keys or DOM.
 
 - `axis(negative: boolean, positive: boolean)` — Turns two held-direction booleans into a −1/0/1 axis value.
