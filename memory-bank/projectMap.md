@@ -51,6 +51,15 @@ Exports plain numbers only; nothing here is computed or ever changes at runtime.
 Every module that needs a shared magic number imports from here instead of hardcoding it.
 
 
+## src/core/damage.ts
+
+The damage formula — the pure §7.2 math plus the ruled damage roll, composed into one hit's damage.
+Stages both stats, applies penetration to the staged defense, then rolls 85–100% at the final step.
+The HP ledger rounds to integers in U8; the matchup sweep and Rule-of-500 tests inject their own dice.
+
+- `damage(input: DamageInput, die: Die)` — The damage of one hit: ((2L/5 + 2) × Power × A / (D × (1 − Pen))) / 50 + 2, all × the roll — staged, rolled, exact float out.
+- `hitsToKo(hp: number, perHit: number)` — Hits to knock out: the HP pool divided by per-hit damage, rounded up to a whole hit.
+
 ## src/core/daynight.ts
 
 The day/night tint table — a pure lookup from wall-clock hour to overlay color and strength.
@@ -68,9 +77,9 @@ dialogues.ts authors content in these shapes; DialogueSystem consumes them at ru
 
 ## src/core/dialogues.ts
 
-The game's dialogue content — sample conversations exercising every Dialogue feature.
-Exports const tables of Dialogue (plus one string[]) covering plain text, choices, flag reads, and callbacks.
-GameScene attaches these to trigger rectangles; DialogueSystem renders whatever they describe.
+The test scene's dialogue content — the two villagers' greetings and gossip, and the fox's bark tree.
+Exports const Dialogue tables covering every Dialogue feature: conditions, choices, flag reads and writes, callbacks.
+GameScene attaches these to NPCs; DialogueSystem renders whatever they describe.
 
 
 ## src/core/flags.ts
@@ -94,6 +103,23 @@ Every scene reads player intent through this module; nothing else touches raw ke
 - `axis(negative: boolean, positive: boolean)` — Turns two held-direction booleans into a −1/0/1 axis value.
 - `isAction(value: unknown)` — Runtime guard: narrows an unknown DOM string to Action.
 - `isDirection(value: unknown)` — Runtime guard: narrows an unknown DOM string to Direction.
+
+## src/core/stages.ts
+
+The stat-stage multipliers — the exact ±6 stage table the battle math multiplies stats by.
+One home for the table's generating rule; damage math and accuracy math both consume it.
+The table is ruled canon — the pasted fractions are pinned verbatim by the test suite.
+
+- `stageMultiplier(stage: number)` — The stage multiplier: (2+s)/2 at zero and above, 2/(2−s) below — the ruled table, generated.
+
+## src/core/stats.ts
+
+The stat and HP formulas — the pure level math every spirit in the game shares.
+Grows a stat cap along a growth curve into the actual stat, clamped at the 255 ceiling; HP stays level-derived.
+The damage module, the forms table, and the matchup tests consume these; nothing here knows Phaser.
+
+- `actualStat(cap: number, level: number, curve: GrowthCurve)` — The actual stat at a level: the cap grown along the curve, floored, clamped to the 255 ceiling.
+- `maxHp(level: number)` — Maximum HP at a level: 5 + 4L — level-derived only, identical across every form and spirit.
 
 ## src/core/trail.ts
 
