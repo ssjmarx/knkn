@@ -21,6 +21,6 @@ const DAY: Tint = { color: 0xffffff, alpha: 0 }
 
 /** The overlay tint for a given hour (0–23); any hour no phase covers gets plain day. */
 export function tintForHour(hour: number): Tint {
-  const phase = PHASES.find((p) => hour >= p.from && hour < p.to)
-  return phase ?? DAY
+  const { color, alpha } = PHASES.find((p) => hour >= p.from && hour < p.to) ?? DAY
+  return { color, alpha }
 }
