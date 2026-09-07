@@ -44,7 +44,7 @@ These shape every lesson, so we settle them now:
 
 | Unit | You build | You learn | Done when |
 |---|---|---|---|
-| 6 | Pure logic core: stats, HP, the damage formula | Modules, testing with Vitest, pure functions | Tests prove the Rule of 500 (~500÷Power hits) |
+| 6 | Pure logic core: stats, HP, the damage formula | Modules, testing with Vitest, pure functions | Tests prove the Rule of 500 (~500÷Power hits)[Ruled 2026-09-06: the stats were redesigned cap/curve-based mid-unit, and the test target evolved into the matchup-envelope sweep — every roster pair bounded (OHKO floor 2, hits ceiling 14 at Power ≥ 60, tunable), with the classic mirror kept as an anchor test.] |
 | 7 | The data tables: type chart, moves, stones | Interfaces, unions, utility types (`Partial`, `Pick`), JSON validation | All 67 moves load and typecheck |
 | 8 | **The initiative queue** | Discriminated unions (`BattleCommand`), exhaustiveness checks with `never` — *the* TS lesson | Four actions resolve correctly by priority tier → speed |
 | 9 | Channeler rites & Wane | State machines, state decay logic | Wane pips rise, decay, floor at 30%; Peal cancels |

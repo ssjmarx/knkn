@@ -3,38 +3,41 @@
 > The living file. Future agents: read this after the brief/context files; update it at session end. Date every entry. Facts only.
 > **Retention (ruled 2026-09-05):** keep detailed history only for the last two units — older unit history compresses to one-liners; the unit tracker and decision log in `progress.md` carry the durable facts; deep history lives in git.
 
-## Current state (2026-09-06 — MILESTONE 1 COMPLETE: "The Walk")
+## Current state (2026-09-06, evening — UNIT 6 COMPLETE: the pure core + Vitest)
 
-- **Phase: the S1 midterm gate is closed.** One map, the follower, day/night tint, dialogue trees with bodies (two gossiping villagers + a choices-tree fox), the typewriter textbox, all three input modes — deployed at knkn.dunaway.io. Next: **U6 — the pure core + Vitest** (the Rule of 500 is the first test; `tintForHour` is the queued second).
-- **Git/deploy:** branch `master`, HEAD [HASH], tree clean, pushed; deployed and server-verified [TIME]. CI still not built.
-- The human does **all** implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+- **Phase:** Semester 2 is open. U6 done — `src/core/{stats,stages,damage,forms}.ts`: cap-grown stats, the exact ±6 stage table, the damage formula with the ruled 85–100 roll behind an injected Die, and the nine-form sheet; 65 tests in root /tests (one suite per core module); npm run verify (test → tsc → map → build, halt-on-error). Nothing imports the core yet — dist/ is byte-identical; the soul shipped ahead of the body. U8's battle engine is the first consumer.
+- **Git/deploy:** branch master; Labs 0–C committed [HASHES]; remaining ship step: the daynight contract fix — verify + commit. Deployed once mid-session (byte-identical build). CI still unbuilt; verify is its local precursor and future spec.
+- The human does all implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 
 ## What's next (the human's solo work)
 
-1. **U6 — the pure core + Vitest:** stats, HP, the damage formula, Rule-of-500 tests; `core/daynight.ts`'s `tintForHour` is the natural second target (pure, argument-injected).
-2. CI when convenient: typecheck + tests + build + deploy on push (Gitea Actions is the natural candidate).
-3. Parked electives from the M1 arc, whenever: the tint-phase lerp challenge; B-held 3× typing speed.
-4. Optional tidy: `docker rm pihole` (the dead container).
+- Finish the U6 ship step: npm run verify (expect 7 files / 65 tests; the 1.39 MB chunk warning is Phaser's weight, filed for U21/22) → commit the daynight fix → optional deploy (dist unchanged).
+- U7 — the data tables: typechart, moves, stones as JSON + TS validation (Partial, Pick, load-time guards). The pre-L50 power gate lives here — availability, not formula, per ruling.
+- A canon line needed by U7/U13: wild stat derivation — same cap/curve math with per-species curves? Same HP law? (Agent recommendation on record: same HP law for everything.) Currently uncanon'd; blocks real early-game balance audits.
+- CI when convenient (Gitea Actions; verify is the spec).
+- Parked electives: tint-phase lerp; B-held 3× typing speed. Optional tidy: docker rm pihole.
+- Tunable by design, revisit at playtest: FOX_CURVE (0.5, 1) placeholder; envelope bounds (floor 2 / ceiling 14).
 
 ## Open decisions (✎ — the human's, never the agent's)
 
-From `design.md` §17:
-1. Working title: **KON KON** / *Nine Stones* / *The Long Hum* / *Commonweal*
-2. Country name sign-off ("the Commonweal") and isles name ("Halcyon")
-3. Epilogue trigger formalized: nine tails (all 8 mastered) → Sun Road base scene; Deep Roots lore found en route
-4. Pilgrim's eight phase-lines — "the game's best 80 words," to be written as a set
-5. Character customization & renaming — where/when the customization and rename screens live in the game flow (start of game vs. diegetic location) — added with the 2026-09-03 customization ruling (`design.md` §17–18)
+From design.md §17:
 
-(Infrastructure open decisions #5 and #6 were both resolved 2026-09-03 — see the decision log in `progress.md`.)
+- Working title: KON KON / Nine Stones / The Long Hum / Commonweal
+- Country name sign-off ("the Commonweal") and isles name ("Halcyon")
+- Epilogue trigger formalized: nine tails (all 8 mastered) → Sun Road base scene; Deep Roots lore found en route
+- Pilgrim's eight phase-lines — "the game's best 80 words," to be written as a set
+- Character customization & renaming — where/when the customization and rename screens live in the game flow (design.md §17–18)
+
+(Infrastructure open decisions #5 and #6 were both resolved 2026-09-03 — see the decision log in progress.md.)
 
 ## Watch items / reminders
 
-- The **laptop (second dev machine) has its own, differently-named `gitea` SSH alias** in its `~/.ssh/config`; both machines pushed to Gitea historically. Pushing knkn from the laptop should work via that machine's alias — untested for this repo.
-- The `gitea` alias on eMachine points at the server's **LAN IP** — fine at home; pushes from off-LAN (over Tailscale) would need a host block using the Tailscale IP.
-- A GitHub PAT sits in **plaintext in eMachine's `~/.bash_history` (~line 1640)** — unused now that everything is SSH; mint-and-scrub if ever needed.
-- Global gitconfig still carries `squeejee09@gmail.com` (repo-local config overrides it with `SSJMarx@dunaway.io`); other new repos will default to the Gmail identity unless the human changes the global.
-- ~~`~/opt/web/knkn` root-owned~~ — chowned 2026-09-03. The dead `pihole` container still sits on the server (Exited) — optional `docker rm` tidy.
-- Design watch items live in the Prototype Watchlist (`design.md` §16) — relevant once battles exist; anything touching the Wane economy is auto-added.
+- vitest pin audit: confirm package.json reads "vitest": "5.0.0" (no caret) — the discipline is worth the glance.
+- Two one-word docstring fixes open from the restructure: `core/input.ts` module line 2 still names KeyboardInput; `keyboardinput.ts` line 4 still says "alongside KeyboardInput" — both publish into the generated map until fixed and `npm run map` re-run.
+- The gitea alias on eMachine points at the server's LAN IP — fine at home; off-LAN pushes (Tailscale) need a host block using the Tailscale IP.
+- A GitHub PAT sits in plaintext in eMachine's ~/.bash_history (~line 1640) — unused (SSH everywhere); mint-and-scrub if ever needed.
+- Global gitconfig still carries squeejee09@gmail.com (repo-local overrides with SSJMarx@dunaway.io).
+- Design watch items live in the Prototype Watchlist (design.md §16); anything touching the Wane economy is auto-added.
 
 ## Session protocol
 
@@ -51,23 +54,11 @@ At the end of every session: update this file and `progress.md` (dated, factual)
 
 ## Session update (2026-09-05, later — The Cartographer: docstring convention + auto project map)
 
-- **Interlude, not a unit** — the M1 finish line is unchanged (flag→dialogue challenge + day/night tint). The 2026-09-05 "script planned next session" promise is **fulfilled**.
-- **Ruling — the docstring convention:** every module opens with a 3-line JSDoc block (what it is / what it does / where it fits), replacing the old `// src/…` first-line comments; every function, method, and getter gets a 1-line one-liner directly above. **Exempt:** constructors, fields, `export type`/`interface`, data consts, and nested/local functions (the last encoded by the parser's 2-space indent anchor). The human typed all 15 modules; agent review verified 15/15 contract-clean (the one violation found was a false positive in the *review tooling*, not the code).
-- **The tool — `scripts/projectmap.ts`:** parses src/ and regenerates `memory-bank/projectMap.md` (now carrying a GENERATED/do-not-hand-edit header). Runs on Node 24 **type stripping** (`node scripts/projectmap.ts` — erasable-only TS, zero new runtime deps); `npm run map` alias; `@types/node ^26.4.1` devDep (first caret pin — a noted, accepted deviation from the exact-pins discipline); `scripts` added to `tsconfig.json` include, so the tool lives inside the `tsc` gate.
-- **Strict mode (user ruling):** a missing or malformed docstring → exit 1, a violation list with `path:line` coordinates, and the map refuses to write. Convention-as-compiler — the same philosophy as `Record` exhaustiveness.
-- **Parser lessons (the debugging arc):** anchored head-matching kills false positives (`if (…)` and `.forEach((key) =>` can never match "name immediately followed by `(`"); the `CONTROL` keyword blacklist is belt-and-suspenders; the `inTypeBody` state machine — interface members are *syntactically identical* to class methods, so context must be carried as state (the fourth state machine this month); the self-destructing comment (a `*/` inside a comment ends it — the convention cannot quote its own delimiter); `noUncheckedIndexedAccess` bites array indexing AND regex captures (`match[1]` is `string | undefined`) — six `!`s, each with a written proof; and the IDE panel under-reports — `./node_modules/.bin/tsc --noEmit` is the court.
-- **Map generated clean: 15 modules.** Side effect worth savoring: the map now *displays* parked residuals (e.g. `isDown(action: Button)` in compositeinput — the old param name, visible in the docs until cleaned).
-- Committed as `501e459` ("made some tooling hooray") and pushed.
+- **Interlude, not a unit.** The docstring convention (3-line JSDoc module blocks + 1-line one-liners, strict mode) and `scripts/projectmap.ts` (`npm run map` regenerates the GENERATED `projectMap.md`) shipped; commit `501e459`. Durable facts: decision log 2026-09-05. (Detail: git history.)
 
 ## Session update (2026-09-05, third — the restructure: layers made physical)
 
-- **Interlude, not a unit.** The M1 finish line is unchanged (flag→dialogue challenge + day/night tint).
-- **Ruling — layered source layout:** `src/core/` (pure logic: input contract, flags, dialogue types+data, trail — **zero Phaser imports, enforced by `grep -rni phaser src/core/` returning silence**), `src/input/` (keyboard, touch, gamepad, composite sources), `src/actors/` (player, fox), `src/scenes/` (boot, game), `src/ui/` (dialoguesystem — future menus/Codex), `main.ts` + `config.ts` at root. Locked decision #3 is now a filesystem fact, not just a doc bullet.
-- **Ruling — input contract split:** `core/input.ts` holds Direction/Action/Button, `InputSource`, `axis`, and the guards; `input/keyboardinput.ts` holds KeyboardInput (the only Phaser-bound half). The map grew to 16 modules.
-- **Ruling — `"noUnusedLocals": true`:** the compiler now catches dead imports, which the review had found the tooling never flagged.
-- **How it went:** VS Code's update-imports-on-move did the mechanical work (drag files between folders, imports rewritten) — the human's first taste of tooling doing refactor chores; the module-resolution break-it got skipped, deferred to a 60-second manual exercise. Review catches: the dialoguesystem module docstring had been mangled mid-word by the move ("…content and a ␣␣␣ nd polls…" — strict mode would have refused to write the map; repaired before running), a false docstring in keyboardinput ("alongside KeyboardInput" — it IS KeyboardInput), and the dead imports above. All riders landed: trailing comma gone, `as Button[]` cast fixed.
-- **Verified:** `tsc` clean via the CLI court; `grep -rni phaser src/core/` silent; map regenerated under the new tree (16 modules, grouped by layer); playtest on the dev server.
-- **Residual (third flag, still open):** two one-word docstring fixes — `core/input.ts` module line 2 still names KeyboardInput, and `keyboardinput.ts` line 4 still says "alongside KeyboardInput"; both publish into the generated map until fixed and `npm run map` is re-run. Commits: `d993b42` (restructure) + `9156100` (review fixes), pushed.
+- **Interlude, not a unit.** Layered layout `src/{core,input,actors,scenes,ui}` (zero-Phaser core, grep-enforced), the input contract split into `core/input.ts`, `"noUnusedLocals": true`; commits `d993b42` + `9156100`. Durable facts: decision log 2026-09-05. Residual: two one-word docstring fixes (→ Watch items). (Detail: git history.)
 ## Session update (2026-09-06 — the NPC interlude → the polish pass → MILESTONE 1)
 
 - **The NPC interlude:** `src/actors/npc.ts` — static stand-frame villagers from the same SRW sheet (character 2 stand column 4, character 3 column 7), immovable bodies mirroring Player's footprint, each carrying its `Dialogue[]`. **The area trigger was retired — NPCs are the dialogue entry points now**; `npc_greeting` deleted. Talk verb: `Player.frontTile()` body-anchored facing-tile probe (PROBE_INSET 2) + fresh A-press in `tryTalk` (NPC first, fox second; no `isShowing` guard — the branch structure is the guard).
@@ -78,3 +69,16 @@ At the end of every session: update this file and `progress.md` (dated, factual)
 - **The TS6133 incident:** a placeholder comment in the Lab C diff deleted the choice branch of `handleInput`; the build court caught it as two write-only private fields (a dead store = vanished readers — the symptom of deleted code). Restored verbatim.
 - **Content review passed (no bugs):** the villager tables compose say-once + XOR gates + counters correctly; `dialogues.ts` docstring rewritten (three flags stale) and `Flags` moved to `import type`. The fox tree closed the Lab C content gap — the choices path is reachable and playtested.
 - **M1 ruled complete by the human:** all break-its and three-mode playtests green; deployed. "One dialogue tree" is satisfied under both readings — player-input branch (the fox) and world-state branch (the villagers).
+
+## Session update (2026-09-06, evening — UNIT 6: the pure core + Vitest)
+
+    Lab 0: Vitest 5.0.0 exact-pinned; tests at root /tests (outside the map parser's jurisdiction by construction); npm test = vitest run; tests joined to the tsconfig include. The two courts: Vitest transforms via esbuild — types stripped, never checked; a type error in a test is invisible to npm test; tsc is the only type court, now covering tests.
+    The mid-unit audit → five rulings → stats v2: actual = floor(Cap × growth(L)), clamped 255; growth per spirit type ({start, exponent}); sheet = caps; +5 stat flat deleted; HP law untouched. core/stats.ts (GrowthCurve, FOX_CURVE — placeholder, playtest-discovered), core/stages.ts (the ruled ±6 table, generated + pinned), core/forms.ts (Record<StatKey, number> — Record-as-validation a unit early, for the sweep).
+    The damage roll ruling: integer 85–100 × at the final step, Pokémon-copied, for risk-reward. Purity by injection: Die = (min, max) => number as damage's second parameter — the InputSource move applied to randomness; tests aim worst-case questions with maxDie/minDie, and a spy die pins the ruled range as law. Consequence: the minimum hit is ~1 after flooring, not 2.
+    Lab C — the envelope: tests/matchups.test.ts sweeps every roster pair × both channels × levels {5…255} × powers {60,100,125}, collect-then-assert (failures enumerate every violation). Bounds ruled: OHKO floor 2 every channel; ceiling 14, best channel, Power ≥ 60 — "fine for now," tunable consts. The classic Rule of 500 survives as an anchor test: base mirror, L50, P100, five hits at both roll extremes.
+    The challenge folded into a guided lab (second fold; U5 was first): tests/daynight.test.ts — edge-pair probes, the tiling property, transcribed-not-mirrored expectations.
+    The catch of the unit: the daynight suite failed 13/16 on first contact — tintForHour was returning raw Phase rows (4 fields) past its 2-field Tint contract. Assignability ≠ exactness: a wider object passes a narrower annotation silently; exact object shape is expressible only in tests (toEqual), never in types. Fixed by destructuring the contract fields; the shared-row mutation hazard was cured by the same fix; the "table's memory" test became "table's privacy" (.not.toBe). The failure set was the diagnosis: exactly the full-structural assertions failed.
+    Two incidents, two habits: the fossil tests (a restore resurrected v1 expectations and silently swept out the stages suite — a green output with a wrong count; the count audit is now the first read of any test output) and green-then-commit (every green run is a checkpoint; git is the undo).
+    npm run verify — built by the human unprompted (test && tsc && map && build, halt-on-error): the ship ritual as one command, the future CI spec, deploy deliberately separate. Its maiden voyage caught the daynight bug before commit.
+    Final state: 23 modules in the map; the core's dependency graph is born (damage → stages); zero Phaser touched all session. Commits [HASHES]; daynight-fix commit pending the ship step.
+- **Bank compression, same evening (retention rule applied):** the two 2026-09-05 interlude session updates (Cartographer, Restructure) compressed to one-liners — durable facts live in the decision log; Watch items deduplicated against What's next and `techContext.md`; the merged decision-log rows in `progress.md` split into proper rows (zero facts changed); canon mirrors and `projectMap.md` untouched.

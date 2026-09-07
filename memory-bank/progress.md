@@ -15,13 +15,8 @@
 ## Unit tracker
 
 - **S1 Foundations "The Walk":** U0 — **✅ 2026-09-03** · U1 — **✅ 2026-09-03** (walking fox live) · U2 Tiled tilemaps, collision, camera — **✅ 2026-09-04** (real map live; 240×240 + lerp-1 rulings) · U3 the follower — **✅ 2026-09-04** (cleanups committed in `62a5b51`) · U4 input abstraction — **✅ 2026-09-04** (keyboard + touch + gamepad all confirmed live) · U5 dialogue engine + flag store — **✅ 2026-09-05** (labs + break-its + commit & deploy; challenge folded into M1 by user ruling)
-- **S2 The Battle Machine:** U6 pure core + Vitest (Rule of 500) · U7 data tables · U8 the initiative queue (discriminated unions, `never`) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — *all not started*
-- **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
+- S2 The Battle Machine: U6 pure core + Vitest — ✅ 2026-09-06 (cap/curve stats, the damage roll, the envelope sweep; 65 tests + verify) · U7 data tables · U8 the initiative queue (discriminated unions, never) · U9 Channeler rites & Wane · U10 transformation & the Band · U11 statuses/stages/Dwindle/Doom — U7 next- **S3 The Living World:** U12 battle↔overworld integration · U13 packs · U14 Foxfire Split · U15 save/load & versioning · U16 the clock & schedules · U17 stone quests (8 verbs) — *all not started*
 - **S4 Production & Ship:** U18 content pipeline · U19 audio · U20 UX/menus/Codex/shell · U21 mobile QA · U22 distribution · U23 public demo & playtest — *all not started*
-
-## Done (detailed — last two units only: U4, U5)
-
-- **2026-09-06** — **MILESTONE 1 COMPLETE — "The Walk":** the NPC interlude grew into the finish line. `actors/npc.ts` static villagers (SRW characters 2/3, stand columns 4/7, immovable, carrying `Dialogue[]`); **area trigger retired — NPCs are the dialogue entry points**; talk = body-anchored facing-tile probe (`frontTile`, PROBE_INSET 2, `satisfies Record<Direction, …>`) + fresh A-press in `tryTalk`; **strict positive-overlap predicate** replaced inclusive `RectangleToRectangle` (perpendicular side-talk proved the edge semantics); two gossiping villagers (`spoke_npc1/2`) = the folded U5 flag challenge, with bodies. Engine lessons: P4 culled pass-through setters; the **ambient-namespace value-import trap** (compiles silently, fails at runtime in prod; `keyboardinput.ts` fixed; audit grep added to the ritual). Polish (8/8): Y-sort by `body.bottom` (canopy → 1000) · `halt()` + fox-idle in dialogue · turn-to-face (`actors/pcsheet.ts`, `OPPOSITE`, `facing` getter) · opaque bottom textbox · typewriter (own-scene `update(delta)`, held-back choices, **B = skip/advance, B-exit deleted**) · `core/daynight.ts` pure tint table + `scrollFactor(0)` overlay (box untinted — "the lamp") · fox choices tree (`fox_liked`) · **`condition` field on `Dialogue`** (read/write/gate triad complete; say-once; counter+clamp — eternal final fact ruled GBC-accurate; adjacency invariant). TS6133 caught a placeholder-deleted choice branch via dead-store fields; restored. Content review passed; docstring truths repaired. All break-its + three-mode playtests green per the human; **M1 ruled complete, deployed**. Commits [HASHES]
 
 ## History (compressed 2026-09-05 — pre-U4; full detail lives in git history and `techContext.md` engine notes)
 
@@ -31,7 +26,7 @@
 - **2026-09-04** — **U2 COMPLETE:** a real 30×30 Tiled map — embedded-tileset export, tile-property collision, hard-locked camera (lerp 1 ruling), canopy layer, boot-time tile-size validation; **240×240 (1:1) ruling**; three-bug postmortem (external `.tsx`, tileset name field, typed cache `{format, data}`); Grumpy Function tilesets licensed
 - **2026-09-04** — **U3 COMPLETE:** the follower — pure `Trail` (arc-length), `Player`, `Fox` steering; follower-jitter postmortem (rounding-phase mismatch → the fox became an Arcade body on the player's physics step); **fox-collision-removed ruling**; Super Retro World PC licensed; U4 pre-start (`InputSource` + `KeyboardInput` built solo)
 - **2026-09-05** — **THE CARTOGRAPHER (interlude):** docstring convention (3-line module blocks, 1-line one-liners) + `scripts/projectmap.ts` strict generator (`npm run map`); Node type stripping; commit `501e459`
-- **2026-09-05** — **THE RESTRUCTURE (interlude):** `src/{core,input,actors,scenes,ui}` layer folders, zero-Phaser core (grep-enforced), input-contract split, `noUnusedLocals`; commits `d993b42` + `9156100
+- **2026-09-05** — **THE RESTRUCTURE (interlude):** `src/{core,input,actors,scenes,ui}` layer folders, zero-Phaser core (grep-enforced), input-contract split, `noUnusedLocals`; commits `d993b42` + `9156100`
 
 ## Decision log
 
@@ -84,7 +79,17 @@
 | 2026-09-06 | Repeatable NPC lines use a counter flag + `Math.min` clamp; **the final line repeating forever is ruled GBC-accurate** | user ruling |
 | 2026-09-06 | **Value-import invariant:** any module using `Phaser.` as a value imports Phaser (the ambient type namespace lets missing value imports compile silently — runtime-only failure); the audit grep joins the ship ritual | standing rule from the deployed-bundle incident |
 | 2026-09-06 | **Milestone 1 "The Walk" complete** (all break-its + three-mode playtests green, deployed) — "one dialogue tree" satisfied under both readings (player-input branch: the fox; world-state branch: the villagers) | user ruling |
+| 2026-09-06 | Vitest 5.0.0 exact-pinned; tests at root /tests; test = vitest run; tests joined to the tsconfig include — Vitest strips types (esbuild), tsc stays the only type court | user action + lab |
+| 2026-09-06 | Stats redesign (five rulings): stats cap at 255 (clamp); the forms sheet is caps (destination at L255); growth curves per spirit type ({start, exponent}); the +5 stat flat deleted; FOX_CURVE = (0.5, 1) placeholder, to be discovered in playtesting; HP law 5 + 4L unchanged | user rulings |
+| 2026-09-06 | Stat-stage table ruled exact: ±6 — 2/(2−s) below zero, (2+s)/2 at and above | user ruling |
+| 2026-09-06 | Damage roll: integer 85–100% multiplied at the final step (before the HP-ledger floor) — Pokémon-copied, for the risk-reward profile; implemented pure via an injected Die contract | user ruling |
+| 2026-09-06 | Matchup envelope bounds ("fine for now" — tunable consts): hits-to-KO ≥ 2 on every channel (the OHKO tripwire); ≤ 14 on the attacker's best channel at Power ≥ 60 (off-channel exempt); the classic Rule of 500 kept as an anchor test (base mirror, L50, P100, both roll extremes) | user ruling |
+| 2026-09-06 | Early power gating: no Power-100+ moves before ~L50, both sides — early pacing via availability (U7 move tables), not formula; early fights tune to the 2–4-turn trash band | user ruling |
+| 2026-09-06 | The wall maxim: "Don't get too attached to any numbers no matter how clean the formula looks" — numbers are decisions; pinned tests make changing them cheap and visible | user ruling |
+| 2026-09-06 | U6 challenge (the daynight suite) converted to a guided lab — the second fold (U5's flag challenge was the first) | user ruling |
+| 2026-09-06 | tintForHour contract fix: returns exact Tints (destructured) — was returning 4-field Phase rows; assignability ≠ exactness — exact object shape is test-only territory | lab diagnosis, human-applied fix |
+| 2026-09-06 | npm run verify = npm test && tsc && npm run map && npm run build, halt-on-error — the ship ritual as one command and the future CI spec; deploy stays a separate deliberate act | user action |
 
-## Not started
+Not started
 
-Units U6–U23, milestones 2–4, CI. **U6 next: the pure core + Vitest** — the Rule of 500 is the first test; `tintForHour` is the queued second. Milestone 1 is complete.
+Units U7–U23, milestones 2–4, CI. U7 next: the data tables — typechart, moves, stones as JSON + TS validation; the pre-L50 power gate lives in the move tables (ruled). A wild-stat-derivation canon line is needed by U7/U13. Units 6 and Milestone 1 are complete.

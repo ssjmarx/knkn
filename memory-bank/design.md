@@ -69,12 +69,13 @@ o...o.....      Wayfare (Mercury)              MOTHERLODE (Terra — exact cente
 **Kon Kon:** nonverbal, animation-first personality (opinions expressed in overworld barks, ear-flattens, tail-flicks; idle richness scales with tails). Name means the sound a fox makes. Base sprite: small fox, nature-spirit, Ōkami-adjacent.
 
 ### 5.1 Stats & levels
-- **Stats:** Actual = floor(Base × (0.5 + L/255)) + 5. **HP = 5 + 4L** (level-derived only, identical across forms). Range 5–255; you start at L5.
+- Stats: Actual = floor(Cap × growth(L)), clamped at 255. The §5.2 sheet reads as caps — each stat's value at L255. Growth is per spirit type: growth(L) = start + (1 − start) × (L/255)^exponent, a two-number {start, exponent} datum; the fox runs (0.5, 1) as a placeholder to be discovered in playtesting. HP = 5 + 4L (level-derived only, identical across every form and spirit). You start at L5. (Redesigned 2026-09-06 — rulings in §18; the old base-stat formula and its +5 flat are retired.)
 - **Channeler Speed = 200 − Σ(move weights) − Σ(item weights)** — flat forever. Creature Speed = actual Spe − Σ(its move weights).
 - **XP:** cost = 25 + 10L (linear), yield scales → constant level cadence (~1 level/10 min mid-game). Quest chunks pay 8–12 levels.
 - **Rule of 500:** same-level neutral mirror hits-to-KO ≈ 500 ÷ Power. Design strikes at Power 60–125 and bulk self-tunes. Boss fights target 10–20 turns; trash 2–4.
 
 ### 5.2 The nine forms (BST 750 each)
+(Ruled 2026-09-06: this sheet is caps — destination values reached at L255; growth is per spirit type — see §5.1/§18.)
 
 | Form | Atk | Def | SpA | SpD | Spe | Identity |
 |---|---|---|---|---|---|---|
@@ -147,7 +148,7 @@ Full unlock ladders as specced (M15→M235 events per stone; AoE by ~M95–115 e
 Both sides secretly select **creature move + Channeler action** (rite, item, transform, Breathe). All four resolve in one queue: **priority tier → speed.** Consequences: kill-pressure reads vs. both enemy actors; transformations resolve at the Channeler's initiative slot (old form is hittable until then). **Transforming costs the Channeler action + that creature's attack** (Quickchange excepts it).
 
 ### 7.2 Damage & stats
-`Damage = ((2L/5+2) × Power × A / (D × (1−Pen))) / 50 + 2` — Pen tiers 0/15/30/50%, applies to final defended stat incl. stages. Stat stages ±6, standard Pokémon multipliers; Acc/Eva ±6; crits ×1.5, ignore stages; **stages persist through transformation, both sides.**
+Damage = ((2L/5+2) × Power × A / (D × (1−Pen))) / 50 + 2 — the total then multiplied by an integer roll of 85–100 at the final step (ruled 2026-09-06, §18; the HP ledger floors to whole HP — U8). Pen tiers 0/15/30/50%, applies to final defended stat incl. stages. Stat stages ±6, the exact ruled table (§18); Acc/Eva ±6; crits ×1.5, ignore stages; stages persist through transformation, both sides.
 
 ### 7.3 Statuses
 Daze (skip chance, Spe↓) · Sleep · Aflame (DoT, Atk↓) · Blind (Acc↓) · **Bound** (no transform, 3t) · **Doom** (deferred damage counter) · **Dwindle-NN** (attacks deal NN% — the general output-reduction status: clones 50, base-form stone moves 80, hexes variable).
@@ -319,6 +320,11 @@ Wane-interference of any kind · 3-body split output (1.5×) · clone×Doom/Leec
 - **GBC shell aesthetic (ruled 2026-09-03; Unit 20):** a purple shell with visible-circuitry vibe — "nothing legally identifying, just a cool vibe." The human will mock up a couple of shell options and choose a default.
 - **Control map (ruled 2026-09-05; immutable):** the game is played with exactly eight inputs — D-pad (up/down/left/right), A, B, Start, Select — nothing else, ever. A = confirm/advance, B = cancel/back; **Start/Select are reserved for the pause menu** (unimplemented; HTML buttons added when relevant). Bindings are **placeholders pending future rebindable controls**: keyboard arrows = D-pad, Z = A, X = B, ENTER = Start, ESC = Select (Start/Select wired when the pause menu lands); gamepad A = `buttons[0]`, B = `buttons[1]`, Select = `buttons[8]`, Start = `buttons[9]`. Ruled to be encoded in the type system immediately: `Action = "a" | "b" | "start" | "select"`.
 - **Dialogue B semantics (ruled 2026-09-06, with the typewriter):** within a conversation, B completes the typewriter instantly and advances complete lines — the earlier B-exits-dialogue behavior is deleted; conversations end only by running out of lines. A remains confirm/advance throughout. The dialogue-context refinement of the control map's B role.
+    Stats & growth redesign (ruled 2026-09-06): the forms sheet is caps — each stat's value at L255. Actual = floor(Cap × growth(L)), clamped at 255; growth is per spirit type: growth(L) = start + (1 − start) × (L/255)^exponent (data: {start, exponent}). The fox runs (0.5, 1) as a placeholder, to be discovered in playtesting. The old +5 stat flat is deleted. HP stays 5 + 4L for every spirit. Consequence: the superboss's "perfect stats" resolve to a five-255 cap sheet.
+    Damage roll (ruled 2026-09-06): after the formula (flat +2 included), the total is multiplied by an integer roll of 85–100% at the final step, before the HP ledger floors — Pokémon's exact mechanic, ruled in for the risk-reward profile. The minimum hit is therefore ~1 after flooring, not 2. The math stays pure: randomness is an injected Die contract, never built in.
+    Matchup envelope (ruled 2026-09-06): the Rule of 500 generalizes from the mirror to the whole roster — every same-level pair, both channels, must sit inside hits-to-KO ≥ 2 (no OHKO, every channel) and ≤ 14 on the attacker's best channel at Power ≥ 60 (off-channel exempt — walls are legal). Bounds are tunable constants, "fine for now"; the classic mirror is kept as an anchor test (base mirror, L50, P100 = 5 hits at both roll extremes). Balance philosophy: "Don't get too attached to any numbers no matter how clean the formula looks."
+    Early power gating (ruled 2026-09-06): before ~L50, neither side has access to Power-100+ moves — early pacing rides the 2–4-turn trash band via availability (U7 move tables), not formula.
+    Stat-stage table (ruled 2026-09-06, exact): −6 2/8 · −5 2/7 · −4 2/6 · −3 2/5 · −2 2/4 · −1 2/3 · 0 1 · +1 3/2 · +2 2 · +3 5/2 · +4 3 · +5 7/2 · +6 4 (generated: 2/(2−s) below zero, (2+s)/2 at and above).
 
 ---
 
