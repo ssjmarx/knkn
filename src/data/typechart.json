@@ -1,0 +1,10 @@
+{
+  "sol":     { "sol": 0.5, "luna": 0.5, "mercury": 2, "venus": 2, "mars": 2, "jupiter": 1, "saturn": 0.5, "terra": 0.5 },
+  "luna":    { "sol": 2, "luna": 0.5, "mercury": 0.5, "venus": 0.5, "mars": 2, "jupiter": 1, "saturn": 1, "terra": 0.5 },
+  "mercury": { "sol": 0.5, "luna": 0.5, "mercury": 1, "venus": 1, "mars": 0.5, "jupiter": 2, "saturn": 2, "terra": 0.5 },
+  "venus":   { "sol": 1, "luna": 0.5, "mercury": 1, "venus": 0.5, "mars": 1, "jupiter": 2, "saturn": 0.5, "terra": 2 },
+  "mars":    { "sol": 1, "luna": 0.5, "mercury": 1, "venus": 2, "mars": 2, "jupiter": 1, "saturn": 0.5, "terra": 2 },
+  "jupiter": { "sol": 2, "luna": 2, "mercury": 0.5, "venus": 0.5, "mars": 1, "jupiter": 0.5, "saturn": 2, "terra": 0 },
+  "saturn":  { "sol": 0.5, "luna": 2, "mercury": 1, "venus": 2, "mars": 0.5, "jupiter": 1, "saturn": 0.5, "terra": 2 },
+  "terra":   { "sol": 1, "luna": 1, "mercury": 2, "venus": 0.5, "mars": 2, "jupiter": 1, "saturn": 0.5, "terra": 0.5 }
+}

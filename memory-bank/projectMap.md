@@ -139,6 +139,20 @@ Each form carries its five stat caps; BST 750 across every row is the table's in
 actualStat grows these caps along a spirit's curve; the matchup sweep reads the whole roster.
 
 
+## src/data/moves.ts
+
+The moves door — the game's move instances as one checked, literal-preserving table.
+Declares the Move contract and its unions; rows are TS-authored (as const satisfies) so ids stay literal and MoveId derives.
+Lab B authors the 24 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
+
+
+## src/data/typechart.ts
+
+The typechart door — the 8×8 attack/defense multipliers, imported from JSON and proven at compile time.
+Declares SpiritType, the join key of the game's tables, and the TypeChart contract the JSON must satisfy.
+Battle math reads multipliers from here once U8 arrives; the test suite pins the exact 64 cells as canon.
+
+
 ## src/input/compositeinput.ts
 
 The input merger — one InputSource facade standing in for many.
