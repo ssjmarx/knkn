@@ -94,13 +94,6 @@ Dialogue choices write through DialogueSystem; conditional dialogue text reads f
 - `hasFlag(flags: Flags, key: string)` — Whether the key exists in the store at all.
 - `resetFlags(flags: Flags)` — Deletes every entry, leaving the record empty.
 
-## src/core/forms.ts
-
-The fox forms table — the nine stat sheets as plain data, cap-shaped by the sheet-as-cap ruling.
-Each form carries its five stat caps; BST 750 across every row is the table's invariant.
-actualStat grows these caps along a spirit's curve; the matchup sweep reads the whole roster.
-
-
 ## src/core/input.ts
 
 The input abstraction for the whole game — one contract, three sources, one composite.
@@ -138,6 +131,13 @@ GameScene feeds it every player step; Fox queries it to follow at a fixed gap.
   - `push(point: Point2)` — Appends a point, dropping the oldest once capacity is exceeded.
   - `last()` — The most recent point, or undefined when nothing has been pushed yet.
   - `atPathDistance(minDistance: number)` — Interpolates the point exactly minDistance back along the walked path.
+
+## src/data/forms.ts
+
+The fox forms table — the nine stat sheets as plain data, cap-shaped by the sheet-as-cap ruling.
+Each form carries its five stat caps; BST 750 across every row is the table's invariant.
+actualStat grows these caps along a spirit's curve; the matchup sweep reads the whole roster.
+
 
 ## src/input/compositeinput.ts
 

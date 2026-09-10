@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest"
 import { damage, hitsToKo, type Die } from "../src/core/damage"
 import { actualStat, maxHp, FOX_CURVE, type GrowthCurve } from "../src/core/stats"
-import { FOX_FORMS, type StatCaps } from "../src/core/forms"
+import { FOX_FORMS, type StatCaps } from "../src/data/forms"
 
 // Always rolls the highest face — the defender's worst case.
 const maxDie: Die = (_min, max) => max

@@ -1,6 +1,6 @@
 // The forms-table suite — the sheet's structural invariants: nine rows, unique ids, BST 750, caps under the ceiling.
 import { describe, it, expect } from "vitest"
-import { FOX_FORMS } from "../src/core/forms"
+import { FOX_FORMS } from "../src/data/forms"
 
 describe("FOX_FORMS", () => {
   it("has nine forms", () => {

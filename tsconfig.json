@@ -12,7 +12,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "resolveJsonModule": true
   },
     "include": ["src", "scripts", "tests", "vite.config.ts"]
 }
