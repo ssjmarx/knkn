@@ -89,6 +89,13 @@
 | 2026-09-06 | U6 challenge (the daynight suite) converted to a guided lab — the second fold (U5's flag challenge was the first) | user ruling |
 | 2026-09-06 | tintForHour contract fix: returns exact Tints (destructured) — was returning 4-field Phase rows; assignability ≠ exactness — exact object shape is test-only territory | lab diagnosis, human-applied fix |
 | 2026-09-06 | npm run verify = npm test && tsc && npm run map && npm run build, halt-on-error — the ship ritual as one command and the future CI spec; deploy stays a separate deliberate act | user action |
+| Date | Decision | Source |
+|---|---|---|
+| 2026-09-07 | **Data-table format rule (the wall, probe-confirmed):** JSON string values widen to `string` — literal-union fields cannot satisfy from raw JSON; union facts must live in keys. Standing rule: JSON doors for key-carried unions + numeric values (typechart); TS modules (`as const satisfies`) for union-valued fields (moves; stones/ladders in Lab C). U18's pipeline targets each table's ruled format | user ruling |
+| 2026-09-07 | **Spirit is a ninth type:** the typechart gains a ninth row/column — spirit defensively resists Jupiter (½), is weak to Mars (2), and Saturn is immune to spirit (spirit→Saturn 0); all other spirit cells neutral (×1) as defaults. `MoveType` folds into `SpiritType`; enforcement is free — growing the union reddens the chart door until the ninth row exists | user ruling |
+| 2026-09-07 | **Shared-24 gap rulings:** strike categories follow each stone's stronger stat *for now* (noted: every spirit will carry physical and special moves down the line); status types daze-snap jupiter / sleep-pollen venus / cinder-bite mars / glare-gaze luna; scatter-gust mercury (spa); utility+setup mostly spirit (noted: specialized utility may be typed later); weights ward 6 / endure 4 / center 4 / twin-bite 3 / leech 5 / scatter 5; Rally atk+1/def+1; **Center spa+1/spd+1** — the middle tier of a line running +1 spa → +1/+1 → +2/+2, mirroring the rally progression | user rulings |
+| 2026-09-07 | **Moves-door shape (two courts demonstrated):** `as const satisfies` rows make the table a union of literal shapes — MoveId derives, but optional-field access fails on the union (26 TS2339s; tests green, tsc red). Fix: private `MOVE_ROWS` (literal, derivation) + public `MOVES: readonly Move[]` (uniform view) | lab diagnosis, human-applied fix |
+| 2026-09-07 | U7 Lab A challenge (the wheel∪cross-edges join test) skipped by user ruling | user ruling |
 
 Not started
 

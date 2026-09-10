@@ -61,3 +61,13 @@ describe("the shared move table", () => {
     expect(violations).toEqual([])
   })
 })
+
+it("pins the ruled stage payloads — every selfStages row, transcribed from the rulings", () => {
+  expect(MOVES.filter((m) => m.selfStages !== undefined).map((m) => [m.id, m.selfStages])).toEqual([
+    ["center", { spa: 1, spd: 1 }],
+    ["war-cry", { atk: 1 }],
+    ["focus-mind", { spa: 1 }],
+    ["stone-stance", { def: 1, spd: 1 }],
+    ["rally", { atk: 1, def: 1 }]
+  ])
+})

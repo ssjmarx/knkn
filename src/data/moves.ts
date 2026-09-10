@@ -9,9 +9,6 @@ import type { StatKey } from "./forms"
 /** The three damage channels — physical, special, or no damage at all. */
 export type MoveCategory = "atk" | "spa" | "support"
 
-/** A move's type — one of the eight stones, or the base fox's own "spirit". */
-export type MoveType = SpiritType | "spirit"
-
 /** The stageable stats — the five battle stats plus accuracy and evasion. */
 export type StageKey = StatKey | "acc" | "eva"
 
@@ -22,7 +19,7 @@ export type StatusKind = "daze" | "sleep" | "aflame" | "blind" | "bound" | "doom
 export interface Move {
   id: string
   name: string
-  type: MoveType
+  type: SpiritType
   category: MoveCategory
   weight: number
   power?: number
@@ -38,7 +35,7 @@ export interface Move {
 
 const MOVE_ROWS = [
   // — the eight elemental strikes (§6.2: 70/0/5) —
-  { id: "sun-spark", name: "Sun-Spark", type: "sol", category: "spa", power: 70, weight: 5 },      // ✎ category
+  { id: "sun-spark", name: "Sun-Spark", type: "sol", category: "spa", power: 70, weight: 5 },
   { id: "dew-lance", name: "Dew-Lance", type: "luna", category: "spa", power: 70, weight: 5 },
   { id: "gust-cut", name: "Gust-Cut", type: "mercury", category: "atk", power: 70, weight: 5 },
   { id: "bloom-whip", name: "Bloom-Whip", type: "venus", category: "spa", power: 70, weight: 5 },
@@ -47,24 +44,24 @@ const MOVE_ROWS = [
   { id: "hour-blade", name: "Hour-Blade", type: "saturn", category: "atk", power: 70, weight: 5 },
   { id: "root-whip", name: "Root-Whip", type: "terra", category: "atk", power: 70, weight: 5 },
   // — the four status carriers (60/30%/6) —
-  { id: "daze-snap", name: "Daze-Snap", type: "jupiter", category: "spa", power: 60, weight: 6, status: "daze", statusChance: 30 },      // ✎ type, category
+  { id: "daze-snap", name: "Daze-Snap", type: "jupiter", category: "spa", power: 60, weight: 6, status: "daze", statusChance: 30 }, 
   { id: "sleep-pollen", name: "Sleep-Pollen", type: "venus", category: "spa", power: 60, weight: 6, status: "sleep", statusChance: 30 },
   { id: "cinder-bite", name: "Cinder-Bite", type: "mars", category: "atk", power: 60, weight: 6, status: "aflame", statusChance: 30 },
   { id: "glare-gaze", name: "Glare-Gaze", type: "luna", category: "spa", power: 60, weight: 6, status: "blind", statusChance: 30 },
   // — utility —
   { id: "renew", name: "Renew", type: "spirit", category: "support", weight: 10, heal: 50 },
-  { id: "ward-stance", name: "Ward-Stance", type: "spirit", category: "support", weight: 6 },                                              // ✎ weight
-  { id: "endure", name: "Endure", type: "spirit", category: "support", weight: 4 },                                                       // ✎ weight
-  { id: "center", name: "Center", type: "spirit", category: "support", weight: 4 },                                                       // ✎ weight — effect deferred
+  { id: "ward-stance", name: "Ward-Stance", type: "spirit", category: "support", weight: 6 }, 
+  { id: "endure", name: "Endure", type: "spirit", category: "support", weight: 4 },
+  { id: "center", name: "Center", type: "spirit", category: "support", weight: 4, selfStages: { spa: 1, spd: 1 } }, 
   { id: "nip", name: "Nip", type: "spirit", category: "atk", power: 35, weight: 2, priority: 1 },
-  { id: "twin-bite", name: "Twin-Bite", type: "spirit", category: "atk", power: 35, weight: 3, hits: 2 },                                 // ✎ weight
-  { id: "leech-bite", name: "Leech-Bite", type: "spirit", category: "atk", power: 50, weight: 5, drain: 33 },                             // ✎ weight
-  { id: "scatter-gust", name: "Scatter-Gust", type: "mercury", category: "spa", power: 45, weight: 5, aoe: true },                        // ✎ type, category, weight
+  { id: "twin-bite", name: "Twin-Bite", type: "spirit", category: "atk", power: 35, weight: 3, hits: 2 }, 
+  { id: "leech-bite", name: "Leech-Bite", type: "spirit", category: "atk", power: 50, weight: 5, drain: 33 }, 
+  { id: "scatter-gust", name: "Scatter-Gust", type: "mercury", category: "spa", power: 45, weight: 5, aoe: true },
   // — setup (wt4 each; Rally wt6, Spirit) —
   { id: "war-cry", name: "War-Cry", type: "spirit", category: "support", weight: 4, selfStages: { atk: 1 } },
   { id: "focus-mind", name: "Focus-Mind", type: "spirit", category: "support", weight: 4, selfStages: { spa: 1 } },
   { id: "stone-stance", name: "Stone-Stance", type: "spirit", category: "support", weight: 4, selfStages: { def: 1, spd: 1 } },
-  { id: "rally", name: "Rally", type: "spirit", category: "support", weight: 6, selfStages: { atk: 1, def: 1 } }                          // ✎ which pair
+  { id: "rally", name: "Rally", type: "spirit", category: "support", weight: 6, selfStages: { atk: 1, def: 1 } }
 ] as const satisfies readonly Move[]
 
 /** The move table as uniform Move rows — the view every consumer iterates. */

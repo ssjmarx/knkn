@@ -5,8 +5,8 @@
  */
 import typechartJson from "./typechart.json"
 
-/** The eight spirit types, one per stone — the join key every game table shares. */
-export type SpiritType = "sol" | "luna" | "mercury" | "venus" | "mars" | "jupiter" | "saturn" | "terra"
+/** The nine spirit types, one per stone — the join key every game table shares. */
+export type SpiritType = "sol" | "luna" | "mercury" | "venus" | "mars" | "jupiter" | "saturn" | "terra" | "spirit"
 
 /** The whole chart: every attacker's row and every defender's column, each exactly once. */
 export type TypeChart = Record<SpiritType, Record<SpiritType, number>>
