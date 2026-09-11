@@ -3,11 +3,7 @@
 > The living file. Future agents: read this after the brief/context files; update it at session end. Date every entry. Facts only.
 > **Retention (ruled 2026-09-05, amended 2026-09-10):** the current unit's session updates stay in detail; at each unit boundary the previous unit's updates compress to one-liners here and their verbatim text moves to `archive/activeContext-history.md`. Durable facts live in `progress.md`'s unit tracker and decision log.
 
-## Current state (2026-09-10, evening — UNIT 7, LAB C LANDED: the provisional move list is whole)
-
-- **Phase:** Semester 2, U7 in progress. Lab A: the typechart door (9×9, spirit included). Labs B–C: `src/data/` now holds moves (54 canon-named rows), stones (8), ladders (8 provisional timelines), plus forms/typechart; 95 tests in root /tests; npm run verify (test → tsc → map → build, halt-on-error) green. Nothing imports the data layer yet — U8's battle engine is the first consumer. U7's done-when ("all 67 moves load and typecheck") still has the 15 templates / 40 semi-original instances open — the human's call whether that closes in U7 or waits for U18's pipeline.
-- **Git/deploy:** branch master; U7 Labs A–B + the base-kit commit `365f1f2` pushed to origin. This session's Lab C tables + test sync are verified and **uncommitted** — the review + commit ship step is the human's. CI still unbuilt; verify is its local precursor and future spec.
-- The human does all implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
+## Current state (2026-11-10, evening — UNIT 7 COMPLETE, UNIT 8 BEGINNING
 
 ## What's next (the human's solo work)
 
@@ -46,6 +42,9 @@ At the end of every session: update this file and `progress.md` (dated, factual)
 
 ## Recent history (compressed 2026-09-10 — verbatim text in `archive/activeContext-history.md`)
 
+- **Phase:** Semester 2, U7 in progress. Lab A: the typechart door (9×9, spirit included). Labs B–C: `src/data/` now holds moves (54 canon-named rows), stones (8), ladders (8 provisional timelines), plus forms/typechart; 95 tests in root /tests; npm run verify (test → tsc → map → build, halt-on-error) green. Nothing imports the data layer yet — U8's battle engine is the first consumer. U7's done-when ("all 67 moves load and typecheck") still has the 15 templates / 40 semi-original instances open — the human's call whether that closes in U7 or waits for U18's pipeline.
+- **Git/deploy:** branch master; U7 Labs A–B + the base-kit commit `365f1f2` pushed to origin. This session's Lab C tables + test sync are verified and **uncommitted** — the review + commit ship step is the human's. CI still unbuilt; verify is its local precursor and future spec.
+- The human does all implementation themselves; the agent teaches, reviews, and maintains this bank — nothing else.
 - **2026-09-05 — U5 complete + two interludes:** dialogue engine + flag store, all three input modes, deployed (M1's dialogue-tree requirement ticked); the Cartographer (docstring convention + `npm run map`); the Restructure (layered `src/{core,input,actors,scenes,ui}`, zero-Phaser grep-enforced core).
 - **2026-09-06 — NPC interlude → MILESTONE 1 complete & deployed → U6 complete:** NPCs replaced area triggers as the dialogue entry points; the polish pass (Y-sort, typewriter with B repurposed, day/night tint "the lamp", `halt`, turn-to-face, the `Dialogue.condition` gate verb); the value-import invariant + audit grep joined the ship ritual. U6: the pure core + Vitest — stats/caps/curves, the injected-Die damage roll, the exact stage table, the matchup-envelope sweep (65 tests); `npm run verify` born; the daynight assignability≠exactness catch; the fossil-test and green-then-commit habits.
 - **2026-09-09 — interlude:** the 13 `math update plan/` docs consolidated into `CONSOLIDATED.md` (~38KB) under the ruling *later revisions overrule earlier ones*. **Two canon conflicts flagged, unresolved (the human's to rule):** (1) the plan's HP formula `battleHp = hpStat × (L/45 + 1)` (cap 150 per form, BST 900) amends canon §5.1's `HP = 5 + 4L` and the shipped `core/stats.ts`; (2) rev12's Channeler pip accuracy `100/75/66/50/33/0` vs canon §7.4 Wane's `100/75/55/40/30`. The bank is unchanged until ruled.
