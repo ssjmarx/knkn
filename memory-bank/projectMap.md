@@ -143,7 +143,7 @@ actualStat grows these caps along a spirit's curve; the matchup sweep reads the 
 
 The moves door — the game's move instances as one checked, literal-preserving table.
 Declares the Move contract and its unions; rows are TS-authored (as const satisfies) so ids stay literal and MoveId derives.
-Lab B authors the 24 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
+Lab B authors the 37 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
 
 
 ## src/data/typechart.ts

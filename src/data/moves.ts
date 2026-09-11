@@ -1,7 +1,7 @@
 /**
  * The moves door — the game's move instances as one checked, literal-preserving table.
  * Declares the Move contract and its unions; rows are TS-authored (as const satisfies) so ids stay literal and MoveId derives.
- * Lab B authors the 24 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
+ * Lab B authors the 37 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
  */
 import type { SpiritType } from "./typechart"
 import type { StatKey } from "./forms"
@@ -23,6 +23,8 @@ export interface Move {
   category: MoveCategory
   weight: number
   power?: number
+  accuracy?: number
+  pen?: number
   priority?: number
   hits?: number
   drain?: number
@@ -31,6 +33,7 @@ export interface Move {
   statusChance?: number
   aoe?: true
   selfStages?: Partial<Record<StageKey, number>>
+  foeStages?: Partial<Record<StageKey, number>>
 }
 
 const MOVE_ROWS = [
@@ -61,7 +64,20 @@ const MOVE_ROWS = [
   { id: "war-cry", name: "War-Cry", type: "spirit", category: "support", weight: 4, selfStages: { atk: 1 } },
   { id: "focus-mind", name: "Focus-Mind", type: "spirit", category: "support", weight: 4, selfStages: { spa: 1 } },
   { id: "stone-stance", name: "Stone-Stance", type: "spirit", category: "support", weight: 4, selfStages: { def: 1, spd: 1 } },
-  { id: "rally", name: "Rally", type: "spirit", category: "support", weight: 6, selfStages: { atk: 1, def: 1 } }
+  { id: "rally", name: "Rally", type: "spirit", category: "support", weight: 6, selfStages: { atk: 1, def: 1 } },
+  { id: "strike", name: "Strike", type: "spirit", category: "atk", power: 50, weight: 3 },
+  { id: "fang-barrage", name: "Fang-Barrage", type: "spirit", category: "atk", power: 75, pen: 15, weight: 5 },
+  { id: "true-strike", name: "True-Strike", type: "spirit", category: "atk", power: 95, weight: 8 },
+  { id: "quickstep", name: "Quickstep", type: "spirit", category: "atk", power: 40, weight: 2, selfStages: { eva: 1 } },
+  { id: "fade-step", name: "Fade-Step", type: "spirit", category: "atk", power: 50, weight: 3, foeStages: { acc: -1 }, selfStages: { eva: 1 } },
+  { id: "ghost-step", name: "Ghost-Step", type: "spirit", category: "atk", power: 60, accuracy: 100, priority: 1, pen: 10, weight: 8, foeStages: { acc: -1 }, selfStages: { eva: 1 } },
+  { id: "attune", name: "Attune", type: "spirit", category: "support", weight: 4, selfStages: { atk: 1 } },
+  { id: "deep-attune", name: "Deep-Attune", type: "spirit", category: "support", weight: 6, selfStages: { atk: 1, spa: 1 } },
+  { id: "soul-attune", name: "Soul-Attune", type: "spirit", category: "support", weight: 8, selfStages: { atk: 2, spa: 2 } },
+  { id: "curl", name: "Curl", type: "spirit", category: "support", weight: 4, selfStages: { def: 1 } },
+  { id: "iron-curl", name: "Iron-Curl", type: "spirit", category: "support", weight: 6, selfStages: { def: 1, spd: 1 } },
+  { id: "steel-curl", name: "Steel-Curl", type: "spirit", category: "support", weight: 8, selfStages: { def: 2, spd: 2 } },
+  { id: "dawn-bolt", name: "Dawn-Bolt", type: "sol", category: "spa", power: 75, weight: 5 }
 ] as const satisfies readonly Move[]
 
 /** The move table as uniform Move rows — the view every consumer iterates. */

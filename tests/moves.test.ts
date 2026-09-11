@@ -1,14 +1,18 @@
-// The moves suite — the shared 24: id pins, load-bearing numbers, and schema-shape invariants.
+// The moves suite — the shared 37: id pins, load-bearing numbers, and schema-shape invariants.
 import { describe, it, expect } from "vitest"
 import { MOVES } from "../src/data/moves"
 
 describe("the shared move table", () => {
-  it("holds exactly the 24 shared moves, by id", () => {
+  it("holds exactly the 37 shared moves, by id", () => {
     expect(MOVES.map((m) => m.id)).toEqual([
       "sun-spark", "dew-lance", "gust-cut", "bloom-whip", "ember-bite", "spark-snap", "hour-blade", "root-whip",
       "daze-snap", "sleep-pollen", "cinder-bite", "glare-gaze",
       "renew", "ward-stance", "endure", "center", "nip", "twin-bite", "leech-bite", "scatter-gust",
-      "war-cry", "focus-mind", "stone-stance", "rally"
+      "war-cry", "focus-mind", "stone-stance", "rally",
+      "strike", "fang-barrage", "true-strike", "quickstep", "fade-step", "ghost-step",
+      "attune", "deep-attune", "soul-attune",
+      "curl", "iron-curl", "steel-curl",
+      "dawn-bolt"
     ])
   })
 
@@ -23,7 +27,12 @@ describe("the shared move table", () => {
       ["daze-snap", 60, 6], ["sleep-pollen", 60, 6], ["cinder-bite", 60, 6], ["glare-gaze", 60, 6],
       ["renew", 0, 10], ["ward-stance", 0, 6], ["endure", 0, 4], ["center", 0, 4],
       ["nip", 35, 2], ["twin-bite", 35, 3], ["leech-bite", 50, 5], ["scatter-gust", 45, 5],
-      ["war-cry", 0, 4], ["focus-mind", 0, 4], ["stone-stance", 0, 4], ["rally", 0, 6]
+      ["war-cry", 0, 4], ["focus-mind", 0, 4], ["stone-stance", 0, 4], ["rally", 0, 6],
+      ["strike", 50, 3], ["fang-barrage", 75, 5], ["true-strike", 95, 8],
+      ["quickstep", 40, 2], ["fade-step", 50, 3], ["ghost-step", 60, 8],
+      ["attune", 0, 4], ["deep-attune", 0, 6], ["soul-attune", 0, 8],
+      ["curl", 0, 4], ["iron-curl", 0, 6], ["steel-curl", 0, 8],
+      ["dawn-bolt", 75, 5]
     ])
   })
 
@@ -68,6 +77,30 @@ it("pins the ruled stage payloads — every selfStages row, transcribed from the
     ["war-cry", { atk: 1 }],
     ["focus-mind", { spa: 1 }],
     ["stone-stance", { def: 1, spd: 1 }],
-    ["rally", { atk: 1, def: 1 }]
+    ["rally", { atk: 1, def: 1 }],
+    ["quickstep", { eva: 1 }],
+    ["fade-step", { eva: 1 }],
+    ["ghost-step", { eva: 1 }],
+    ["attune", { atk: 1 }],
+    ["deep-attune", { atk: 1, spa: 1 }],
+    ["soul-attune", { atk: 2, spa: 2 }],
+    ["curl", { def: 1 }],
+    ["iron-curl", { def: 1, spd: 1 }],
+    ["steel-curl", { def: 2, spd: 2 }]
   ])
+})
+
+it("pins the foeStages payloads — debuffs that ride the hit", () => {
+  expect(MOVES.filter((m) => m.foeStages !== undefined).map((m) => [m.id, m.foeStages])).toEqual([
+    ["fade-step", { acc: -1 }],
+    ["ghost-step", { acc: -1 }]
+  ])
+})
+
+it("pins the new fields' rulings — pen values, and Ghost-Step's declared accuracy", () => {
+  expect(MOVES.filter((m) => m.pen !== undefined).map((m) => [m.id, m.pen])).toEqual([
+    ["fang-barrage", 15],
+    ["ghost-step", 10]
+  ])
+  expect(MOVES.find((m) => m.id === "ghost-step")!.accuracy).toBe(100)
 })
