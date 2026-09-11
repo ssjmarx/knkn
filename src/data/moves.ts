@@ -1,7 +1,7 @@
 /**
  * The moves door — the game's move instances as one checked, literal-preserving table.
  * Declares the Move contract and its unions; rows are TS-authored (as const satisfies) so ids stay literal and MoveId derives.
- * Lab B authors the 37 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
+ * 54 rows — Lab B's 37 shared plus Lab C's 17 stone originals & capstones; ladders and U8 cite by MoveId.
  */
 import type { SpiritType } from "./typechart"
 import type { StatKey } from "./forms"
@@ -28,6 +28,7 @@ export interface Move {
   priority?: number
   hits?: number
   drain?: number
+  recoil?: number
   heal?: number
   status?: StatusKind
   statusChance?: number
@@ -77,7 +78,26 @@ const MOVE_ROWS = [
   { id: "curl", name: "Curl", type: "spirit", category: "support", weight: 4, selfStages: { def: 1 } },
   { id: "iron-curl", name: "Iron-Curl", type: "spirit", category: "support", weight: 6, selfStages: { def: 1, spd: 1 } },
   { id: "steel-curl", name: "Steel-Curl", type: "spirit", category: "support", weight: 8, selfStages: { def: 2, spd: 2 } },
-  { id: "dawn-bolt", name: "Dawn-Bolt", type: "sol", category: "spa", power: 75, weight: 5 }
+  { id: "dawn-bolt", name: "Dawn-Bolt", type: "sol", category: "spa", power: 75, weight: 5 },
+  // — the eight crowned originals (§6.3 capstone column — canon stats; field synergies are U8 comments) —
+  { id: "sun-lance", name: "Sun-Lance", type: "sol", category: "spa", power: 90, pen: 15, weight: 8 }, // Sun-Dawn: Pen 30
+  { id: "dream-bite", name: "Dream-Bite", type: "luna", category: "spa", power: 80, weight: 6, status: "sleep", statusChance: 20 }, // Moon-Veil: 35% sleep
+  { id: "foxfire-split", name: "Foxfire Split", type: "mercury", category: "support", weight: 6 }, // 1→2 bodies, slot-occupied (§7.6)
+  { id: "sweet-drain", name: "Sweet-Drain", type: "venus", category: "spa", power: 75, drain: 50, weight: 6 }, // Bloom-Hush: heal 75%
+  { id: "reckless-cleave", name: "Reckless Cleave", type: "mars", category: "atk", power: 110, recoil: 25, weight: 10 }, // Ember-Wake: 30% Aflame
+  { id: "sky-fall", name: "Sky-Fall", type: "jupiter", category: "spa", power: 120, weight: 12 }, // Storm-Sky: never misses
+  { id: "reapers-toll", name: "Reaper's Toll", type: "saturn", category: "spa", power: 70, status: "doom", statusChance: 100, weight: 8 }, // Doom-3; Grey-Hush: Doom-2
+  { id: "quake-step", name: "Quake-Step", type: "terra", category: "atk", power: 95, weight: 9 }, // Deep-Soil: −1 Spe on hit
+  // — second originals + the Mercury capstone (§6.3/§7.6 — provisional stats: §6.1 template grammar × §5.2 identity) —
+  { id: "sun-flare", name: "Sun-Flare", type: "sol", category: "spa", power: 70, weight: 6, status: "blind", statusChance: 30 }, // provisional — T7 grammar
+  { id: "moon-double", name: "Moon-Double", type: "luna", category: "spa", power: 45, hits: 2, weight: 5 }, // provisional — the phantom's double-strike
+  { id: "ricochet-dart", name: "Ricochet-Dart", type: "mercury", category: "atk", power: 45, hits: 2, priority: 1, weight: 4 }, // provisional — T4/T11 grammar
+  { id: "spore-cloud", name: "Spore-Cloud", type: "venus", category: "spa", power: 50, aoe: true, weight: 6, status: "sleep", statusChance: 30 }, // provisional — the Venus AoE
+  { id: "cleave-storm", name: "Cleave-Storm", type: "mars", category: "atk", power: 45, hits: 3, weight: 7 }, // provisional — the glass-cannon flurry
+  { id: "sky-rend", name: "Sky-Rend", type: "jupiter", category: "spa", power: 105, accuracy: 85, weight: 8 }, // provisional — T3 Heavy grammar
+  { id: "reap", name: "Reap", type: "saturn", category: "atk", power: 65, drain: 33, weight: 5 }, // provisional — T6 grammar
+  { id: "fissure-wave", name: "Fissure-Wave", type: "terra", category: "atk", power: 60, aoe: true, weight: 6 }, // provisional — the Terra AoE
+  { id: "multitude", name: "Multitude", type: "mercury", category: "support", weight: 8 } // the M255 capstone: Split → 1→3
 ] as const satisfies readonly Move[]
 
 /** The move table as uniform Move rows — the view every consumer iterates. */

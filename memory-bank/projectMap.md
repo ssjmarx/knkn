@@ -139,11 +139,25 @@ Each form carries its five stat caps; BST 750 across every row is the table's in
 actualStat grows these caps along a spirit's curve; the matchup sweep reads the whole roster.
 
 
+## src/data/ladders.ts
+
+The ladders door — each stone's move-unlock timeline, M15 to M235, as authored events.
+Declares UnlockEvent; every event cites a MoveId, so unlock typos are compile errors.
+The Record demands all eight stones; the gate test and the pacing pins hold the laws.
+
+
 ## src/data/moves.ts
 
 The moves door — the game's move instances as one checked, literal-preserving table.
 Declares the Move contract and its unions; rows are TS-authored (as const satisfies) so ids stay literal and MoveId derives.
-Lab B authors the 37 shared moves; ladders (Lab C) and the battle engine (U8) cite rows by MoveId.
+54 rows — Lab B's 37 shared plus Lab C's 17 stone originals & capstones; ladders and U8 cite by MoveId.
+
+
+## src/data/stones.ts
+
+The stones door — the eight planetary stones as identity plus kit citations.
+Declares the Stone contract; rows cite MoveIds so every kit citation compile-checks.
+Ladders (ladders.ts) time each kit's unlocks; the engine (U8) reads fields by stone id.
 
 
 ## src/data/typechart.ts
